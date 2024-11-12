@@ -5064,7 +5064,7 @@ a img {
     flex-direction: column;
     align-items: center;
     max-width: 100%; /* Ensures tech blocks fit within the grid */
-    padding: 15px;
+    /* padding: 15px; */
 }
 
 /* Header styling for each section */
@@ -5115,7 +5115,7 @@ a img {
     }
 
     .tech {
-        max-width: 100%; /* Ensures tech blocks fit within grid on mobile */
+        max-width: 90%; /* Ensures tech blocks fit within grid on mobile */
     }
 
     .icon-grid img, .icon-grid i {
@@ -5274,7 +5274,7 @@ a img {
 
 /* Work Experience Section Styles */
 #experience {
-    padding: 50px 15px;
+    padding: 50px 1px;
     background: #fff;  /* Changed from grey to white to match website */
 }
 
@@ -5624,3 +5624,18 @@ html, body {
     }
 }
 
+
+/* Responsive styling for smaller screens */
+@media only screen and (max-width: 768px) {
+    .profile-image {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .profile-image {
+        width: 150px;
+        height: 150px;
+    }
+}
