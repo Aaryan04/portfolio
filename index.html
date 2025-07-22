@@ -12,7 +12,6 @@
     <!-- Author Metadata -->
     <meta name="author" content="Aditya Vikram Singh" />
     <!-- Keyword Metadata -->
-    <meta http-equiv=”refresh” content="5" />
     <meta
       name="keywords"
       content="Aaryan Shah"
@@ -31,10 +30,10 @@
     <div id="particles-js">
       <div class="header">
         <img
-            src="assets/img/jpg/profile_pic_aaryan2.jpg"
+            src="assets/img/jpg/grad_photo_dp.jpeg"
             alt="Professional Me"
             class="profile-image"
-            width="15%"
+            width="25%"
             style="border-radius: 50%"
           />
         <h1>
@@ -57,16 +56,26 @@
         </div>
         <div class="header-links">
           <a class="link" href="#about" data-scroll>About Me</a>
+          <a class="link" href="#education" data-scroll>Education</a>
           <a class="link" href="#experience" data-scroll>Experience</a>
           <a class="link" href="#projects" data-scroll>Projects</a>
           <a class="link" href="#publications" data-scroll>Publications</a>
+          <a class="link" href="#contact" data-scroll>Contact</a>
         </div>
       </div>
       <a class="down" href="#about" data-scroll><i class="icon fa fa-chevron-down" aria-hidden="true"></i></a>
     </div>
 
+    <!-- Dark Mode Toggle -->
+    <div class="theme-toggle-container">
+      <button id="theme-toggle" class="theme-toggle-main" aria-label="Toggle dark mode">
+        <i class="fa fa-moon-o" id="theme-icon"></i>
+        <span class="toggle-text">Dark Mode</span>
+      </button>
+    </div>
+
     <!-- About Section -->
-    <section id="about">
+    <section id="about" class="fade-in">
       <!-- User Introduction-->
       <div class="user-details">
         <h1>About Me</h1>
@@ -119,7 +128,7 @@
       <!-- User Specifics -->
       <div class="user">
         <!-- First Row -->
-        <div class="tech">
+        <div class="tech fade-in-stagger">
             <h2>Languages</h2>
             <div class="icon-grid">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" width="75" height="75"/>
@@ -129,7 +138,7 @@
             <p>My favorite languages for systems programming and software engineering.</p>
         </div>
     
-        <div class="tech">
+        <div class="tech fade-in-stagger">
             <h2>Databases</h2>
             <div class="icon-grid">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original-wordmark.svg" width="75" height="75"/>
@@ -140,7 +149,7 @@
             <p>My preferred databases for building scalable applications.</p>
         </div>
     
-        <div class="tech">
+        <div class="tech fade-in-stagger">
             <h2>Libraries</h2>
             <div class="icon-grid">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original-wordmark.svg" width="75" height="75"/>
@@ -151,7 +160,7 @@
             <p>My go-to libraries for machine learning and data analysis.</p>
         </div>
     
-        <div class="tech">
+        <div class="tech fade-in-stagger">
             <h2>Dashboards</h2>
             <div class="icon-grid">
                 <img src="https://img.icons8.com/?size=512&id=9Kvi1p1F0tUo&format=png" width="75" height="75"/>
@@ -163,7 +172,7 @@
         </div>
     
         <!-- Second Row -->
-        <div class="tech">
+        <div class="tech fade-in-stagger">
             <h2>MLOps</h2>
             <div class="icon-grid">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original-wordmark.svg" />
@@ -173,7 +182,7 @@
             <p>My tools for deployment and infrastructure management.</p>
         </div>
     
-        <div class="tech">
+        <div class="tech fade-in-stagger">
             <h2>Tools</h2>
             <div class="icon-grid">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original-wordmark.svg" />
@@ -184,7 +193,7 @@
             <p>My essential tools for development and collaboration.</p>
         </div>
     
-        <div class="tech">
+        <div class="tech fade-in-stagger">
             <h2>Cloud</h2>
             <div class="icon-grid">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" width="75" height="75"/>
@@ -194,7 +203,7 @@
             <p>My cloud platforms for hosting and deployment.</p>
         </div>
     
-        <div class="tech">
+        <div class="tech fade-in-stagger">
             <h2>Big Data</h2>
             <div class="icon-grid">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apachespark/apachespark-original-wordmark.svg" width="75" height="75"/>
@@ -205,19 +214,72 @@
             <p>My preferred technologies for large-scale data processing and analytics.</p>
         </div>
     </div>
-    
+    </section>
 
+    <!-- Education Section -->
+    <section id="education" class="fade-in">
+      <div class="user-details">
+        <h1>Education</h1>
+      </div>
+      <div class="timeline">
+        <!-- Master's Degree -->
+        <div class="timeline-item fade-in-stagger">
+          <div class="timeline-date">Aug 2023 - May 2025</div>
+          <div class="timeline-icon">
+            <i class="fa fa-graduation-cap"></i>
+          </div>
+          <div class="timeline-content">
+            <h3>Master of Science in Applied Data Science</h3>
+            <h4>University of Southern California</h4>
+            <p class="timeline-location">Los Angeles, CA</p>
+            <p style="text-align: center;"><strong>Relevant Courses:</strong></p>
+            <div class="skills-container">
+              <span class="skill-tag">Data Science at Scale</span>
+              <span class="skill-tag">Machine Learning</span>
+              <span class="skill-tag">Statistical Methods</span>
+              <span class="skill-tag">Data Management</span>
+              <span class="skill-tag">Natural Language Processing</span>
+              <span class="skill-tag">Deep Learning</span>
+              <span class="skill-tag">Data Visualization</span>
+              <span class="skill-tag">Big Data Analytics</span>
+            </div>
+          </div>
+        </div>
 
+        <!-- Bachelor's Degree -->
+        <div class="timeline-item fade-in-stagger">
+          <div class="timeline-date">Aug 2019 - June 2023</div>
+          <div class="timeline-icon">
+            <i class="fa fa-graduation-cap"></i>
+          </div>
+          <div class="timeline-content">
+            <h3>Bachelor of Technology in Electronics and Telecommunication Engineering</h3>
+            <h4>University of Mumbai</h4>
+            <p class="timeline-location">Mumbai, India</p>
+            <p style="text-align: center;"><strong>Relevant Courses:</strong></p>
+            <div class="skills-container">
+              <span class="skill-tag">Data Structures & Algorithms</span>
+              <span class="skill-tag">Database Management</span>
+              <span class="skill-tag">Object Oriented Programming</span>
+              <span class="skill-tag">Digital Signal Processing</span>
+              <span class="skill-tag">Computer Networks</span>
+              <span class="skill-tag">Software Engineering</span>
+              <span class="skill-tag">Linear Algebra</span>
+              <span class="skill-tag">Statistics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Work Experience Section -->
-    <section id="experience">
+    <section id="experience" class="fade-in">
       <div class="user-details">
         <h1>Work Experience</h1>
       </div>
-
-      <div class="timeline">
+        <div class="timeline">
         <!-- Sr ML Engineer Role -->
-        <div class="timeline-item">
+        <div class="timeline-item fade-in-stagger">
           <div class="timeline-date">Dec 2023 - Present</div>
           <div class="timeline-icon">
             <i class="fa fa-rocket"></i>
@@ -255,7 +317,7 @@
         </div>
 
         <!-- Sr Data Scientist Role -->
-        <div class="timeline-item">
+        <div class="timeline-item fade-in-stagger">
           <div class="timeline-date">Feb 2022 - May 2022</div>
           <div class="timeline-icon">
             <i class="fa fa-code"></i>
@@ -275,7 +337,7 @@
         </div>
 
         <!-- BI Manager Role -->
-        <div class="timeline-item">
+        <div class="timeline-item fade-in-stagger">
           <div class="timeline-date">Jun 2021 - Aug 2021</div>
           <div class="timeline-icon">
             <i class="fa fa-chart-bar"></i>
@@ -289,9 +351,7 @@
               <span class="skill-tag">MongoDB</span>
               <span class="skill-tag">Financial Analysis</span>
               <span class="skill-tag">Python</span>
-              <span class="skill-tag">Optimization
-                 
-              </span>              
+              <span class="skill-tag">Optimization</span>              
             </div>
           </div>
         </div>
@@ -299,13 +359,12 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects">
+    <section id="projects" class="fade-in">
       <div class="user-details">
         <h1>Featured Projects</h1>
       </div>
-
-      <!-- User Project #1: Personal Résumé Website -->
-      <div class="user-projects">
+        <!-- User Project #1: Personal Résumé Website -->
+        <div class="user-projects fade-in">
         <div class="images-right">
           <picture>
             <source type="image/webp" srcset="assets/img/jpg/datapipeline.webp" alt="Personal Website" />
@@ -316,18 +375,10 @@
           <h3>Marketmind: Serverless Data Ingestion Pipeline for Real-Time Analytics</h3>
           <div class="skills-container">
             <span class="skill-tag">AWS</span>
-            <span class="skill-tag">SQL</span>
             <span class="skill-tag">Python</span>
             <span class="skill-tag">ETL</span>
-            <span class="skill-tag">Glue Jobs</span>
-            <span class="skill-tag">Athena</span>
-            <span class="skill-tag">Kinesis</span>
-            <span class="skill-tag">Analytics</span>
             <span class="skill-tag">Serverless</span>
-            <span class="skill-tag">Grafana</span>
-
-               
-            </span>              
+            <span class="skill-tag">Analytics</span>
           </div>
           <p style="text-align: justify">
             Developed a serverless data ingestion pipeline to capture and process real-time retail transaction data using AWS (Lambda, Glue, S3, Athena, Kinesis), Python, and SQL. Enabled efficient data flow and transformed raw data into insights, visualized in Grafana for data-driven marketing and business strategies.
@@ -348,18 +399,10 @@
           <h3>YelpRec: Scalable Hybrid Recommendation System</h3>
           <div class="skills-container">
             <span class="skill-tag">Python</span>
-            <span class="skill-tag">Pyspark</span>
-            <span class="skill-tag">Spark RDD</span>
+            <span class="skill-tag">PySpark</span>
             <span class="skill-tag">XGBoost</span>
-            <span class="skill-tag">CatBoost</span>
-            <span class="skill-tag">Hybrid Recommendation System</span>
-            <span class="skill-tag">Collaborative Filtering</span>
-            <!-- <span class="skill-tag">Analytics</span>
-            <span class="skill-tag">Serverless</span>
-            <span class="skill-tag">Grafana</span> -->
-
-               
-            </span>              
+            <span class="skill-tag">Machine Learning</span>
+            <span class="skill-tag">Recommendation Systems</span>
           </div>
           <p style="text-align: justify">
             Built a hybrid recommendation system using item-based collaborative filtering and machine learning models (XGBoost, CatBoost) on the Yelp dataset. Built a scalable data pipeline with PySpark and Spark RDDs to process over 1 million records, enabling rapid experimentation and optimized model performance with an RMSE of 0.9798.
@@ -382,23 +425,10 @@
           <h3>DocuBot: Intelligent PDF Query System</h3>
           <div class="skills-container">
             <span class="skill-tag">LangChain</span>
-            <span class="skill-tag">LLM</span>
+            <span class="skill-tag">OpenAI GPT</span>
             <span class="skill-tag">NLP</span>
-            <span class="skill-tag">Text Processing</span>
             <span class="skill-tag">Vector Database</span>
-            <span class="skill-tag">OpenAI</span>
-            <span class="skill-tag">GPT model</span>
-            <span class="skill-tag">PyPDF2</span>
             <span class="skill-tag">FAISS</span>
-            <span class="skill-tag">Embedding</span>
-
-            <!-- <span class="skill-tag">Kinesis</span>
-            <span class="skill-tag">Analytics</span>
-            <span class="skill-tag">Serverless</span>
-            <span class="skill-tag">Grafana</span> -->
-
-               
-            </span>              
           </div>
           <p style="text-align: justify">
             Developed a conversational PDF query system using LangChain, OpenAI GPT models, and FAISS for efficient document retrieval. Optimized document parsing and embedding with PyPDF2 and a chunk overlap strategy for better context retention. Integrated FAISS vector storage for accurate retrieval, enabling precise, context-aware responses to user queries.
@@ -425,14 +455,10 @@
           <h3>Advanced Martian Frost Detection Using Deep Learning</h3>
           <div class="skills-container">
             <span class="skill-tag">Python</span>
-            <span class="skill-tag">Pytorch</span>
-            <span class="skill-tag">Keras</span>
+            <span class="skill-tag">PyTorch</span>
             <span class="skill-tag">CNN</span>
-            <span class="skill-tag">GPU Optimization</span>
-            <span class="skill-tag">Data Augmentation</span>
-            <span class="skill-tag">Image Classification</span>
             <span class="skill-tag">Deep Learning</span>
-            </span>
+            <span class="skill-tag">Image Classification</span>
           </div>
           <p style="text-align: justify">
             Developed a custom 3-layer CNN model to detect Martian frost using HiRISE data, achieving 82% validation accuracy. Enhanced model performance with data augmentation, regularization, and early stopping techniques. Experimented with VGG16, ResNet50, and EfficientNetB0 architectures, showcasing their effectiveness in Martian image classification tasks.
@@ -454,26 +480,11 @@
         <div class="contents" style="text-align: center">
           <h3>Dynamic Sales Performance and Forecasting Tool</h3>
           <div class="skills-container">
-            <span class="skill-tag">PowerBI</span>
-            <span class="skill-tag">Advanced Excel</span>
+            <span class="skill-tag">Power BI</span>
             <span class="skill-tag">DAX</span>
-            <span class="skill-tag">Power Query</span>
-            <span class="skill-tag">Pivot Table</span>
-            <span class="skill-tag">Data Analysis</span>
+            <span class="skill-tag">Excel</span>
             <span class="skill-tag">Data Visualization</span>
-
-
-
-            <!-- <span class="skill-tag">ETL</span>
-            <span class="skill-tag">Glue Jobs</span>
-            <span class="skill-tag">Athena</span>
-            <span class="skill-tag">Kinesis</span>
-            <span class="skill-tag">Analytics</span>
-            <span class="skill-tag">Serverless</span>
-            <span class="skill-tag">Grafana</span> -->
-
-                
-            </span>              
+            <span class="skill-tag">Forecasting</span>
           </div>
           <p style="text-align: justify">
             Created an interactive PowerBI dashboard to track $1.6M in sales across regions and customer segments in United States, offering real-time insights for leadership. Developed a 15-day sales forecast model using historical data and DAX, accurately predicting demand to support inventory planning and promotional strategies.
@@ -501,12 +512,9 @@
         <div class="skills-container">
           <span class="skill-tag">Python</span>
           <span class="skill-tag">SQL</span>
-          <span class="skill-tag">Data Pipelining</span>
           <span class="skill-tag">Parallel Processing</span>
-          <span class="skill-tag">Data Chunking</span>
           <span class="skill-tag">Django</span>
           <span class="skill-tag">Docker</span>
-          </span>
         </div>
         <p style="text-align: justify">
           Engineered a custom SQL language in Python with complete SQL functionality, delivered through an emoji-based interface to simplify complex queries for non-experts. Enhanced processing for large datasets up to 1TB with data chunking and parallel processing via joblib, significantly reducing query times and increasing data throughput.
@@ -530,18 +538,10 @@
           <h3>Learnera: A Course Recommendation System</h3>
           <div class="skills-container">
             <span class="skill-tag">Python</span>
-            <span class="skill-tag">Pytorch</span>
             <span class="skill-tag">NLP</span>
-            <span class="skill-tag">Machine Learning</span>
             <span class="skill-tag">TF-IDF</span>
             <span class="skill-tag">A/B Testing</span>
-            <span class="skill-tag">Web Development</span>
-            <span class="skill-tag">Recommendation</span>
-            <!-- <span class="skill-tag">Serverless</span>
-            <span class="skill-tag">Grafana</span> -->
-
-                
-            </span>              
+            <span class="skill-tag">Recommendation Systems</span>
           </div>
           <p style="text-align: justify">
             Built an NLP-driven course recommendation engine with TF-IDF and content-based filtering, achieving high accuracy in matching courses to user preferences. Enhanced recommendations for over 10,000 profiles using collaborative filtering and improved course completion rates through A/B testing on recommendation models, delivering highly tailored content for diverse learning needs.
@@ -553,16 +553,11 @@
       </div>
     </section>
 
-    
-
-
-
-
-
-    <section id="publications">
-      <h2 class="section-title">Publications</h2>
-      
-      <div class="publications-container">
+    <section id="publications" class="fade-in">
+      <div class="user-details">
+        <h1>Publications</h1>
+      </div>
+        <div class="publications-container">
           <!-- Publication Item -->
           <div class="publication-item">
               <div class="publication-icon">
@@ -660,12 +655,64 @@
           </div>
       </div>
   </div>
-  </section>
+    </section>
 
+    <!-- Contact Section -->
+    <section id="contact" class="fade-in">
+      <div id="particles-contact"></div>
+      <div class="user-details">
+        <h1>Get In Touch</h1>
+      </div>
+      <div class="contact-container">
+        <div class="contact-content">
+          <p class="contact-description">
+            I'm always interested in hearing about new opportunities, collaborations, or just having a chat about data science and technology. 
+            Feel free to reach out!
+          </p>
+          
+          <form class="contact-form" id="contactForm" action="https://formspree.io/f/xnnzjlnb" method="POST">
+            
+            <div class="form-group">
+              <input type="text" name="name" placeholder="Your Name" required>
+            </div>
+            
+            <div class="form-group">
+              <input type="email" name="email" placeholder="Your Email" required>
+            </div>
+            
+            <div class="form-group">
+              <input type="text" name="subject" placeholder="Subject" required>
+            </div>
+            
+            <div class="form-group">
+              <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+              <span>Send Message</span>
+              <i class="fa fa-paper-plane"></i>
+            </button>
+          </form>
+          
+          <div class="contact-info">
+            <div class="info-item">
+              <i class="fa fa-envelope"></i>
+              <a href="mailto:shah.aar27@gmail.com">shah.aar27@gmail.com</a>
+            </div>
+            <div class="info-item">
+              <i class="fa fa-linkedin"></i>
+              <a href="https://www.linkedin.com/in/aaryanshah27/" target="_blank">LinkedIn</a>
+            </div>
+            <div class="info-item">
+              <i class="fa fa-github"></i>
+              <a href="https://github.com/Aaryan04" target="_blank">GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
 
-    <footer class="footer">
-      <p>&copy; Aaryan Akshay Shah, 2024</p>
-    </footer>
 
     <!-- Import JS: Particles Theme -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
