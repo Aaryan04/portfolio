@@ -1,6 +1,6 @@
 # Reading section content
 
-Source for the portfolio's Reading section (`/reading/`). Pages are generated, so edit files here and rebuild.
+Source for the portfolio's Reading page (`/reading/`), opened from the "Reading" item in the site nav. Pages are generated, so edit files here and rebuild.
 
 ## Add a paper explainer or blog post
 
@@ -11,15 +11,14 @@ Source for the portfolio's Reading section (`/reading/`). Pages are generated, s
    python3 scripts/build_reading.py
    ```
 3. Preview with `python3 -m http.server` from the repo root, then open http://localhost:8000/reading/.
-4. Commit the Markdown and the regenerated files (`index.html`, `reading/`, `sitemap.xml`). GitHub Pages serves them as they are.
+4. Commit the Markdown and the regenerated files (`reading/`, `sitemap.xml`). GitHub Pages serves them as they are.
 
 ## Add an interactive guide or external link
 
-Add an entry to `reading.json` with `id`, `type` (`guide`, `side`, `blog` or `paper`), `title`, `summary`, `url`, `tags` and `date`. Set `featured: true` to prefer it on the home page. Then rebuild.
+Add an entry to `reading.json` with `id`, `type` (`guide`, `side`, `blog` or `paper`), `title`, `summary`, `url`, `tags` and `date`. Then rebuild.
 
 ## What the build generates
 
-- The **Reading** section on the home page: the newest article first, then featured guides, then the rest. It sits between the `<!-- reading:start -->` and `<!-- reading:end -->` markers in `index.html`.
-- `reading/index.html`: the full list, with type filters and search.
+- `reading/index.html`: the reading list, newest first, with type filters and search. The home page only links to it from the nav; the build does not change `index.html`.
 - `reading/papers/<slug>/index.html`: article pages with a table of contents, KaTeX maths and interactive figures.
 - `reading/feed.xml` (RSS) and `sitemap.xml`.
