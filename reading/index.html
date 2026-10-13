@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reading List · Aaryan Shah</title>
+    <meta name="description" content="Aaryan Shah&#x27;s reading list: interactive guides on LLMs, GPUs, diffusion and recommender systems, plus paper explainers written for first-time readers." />
+    <meta name="author" content="Aaryan Shah" />
+    <meta name="theme-color" content="#F5F0E8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E0C0A" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://aaryan04.github.io/portfolio/reading/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Reading List · Aaryan Shah" />
+    <meta property="og:description" content="Aaryan Shah&#x27;s reading list: interactive guides on LLMs, GPUs, diffusion and recommender systems, plus paper explainers written for first-time readers." />
+    <meta property="og:url" content="https://aaryan04.github.io/portfolio/reading/" />
+    <meta property="og:image" content="https://aaryan04.github.io/portfolio/assets/site/img/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="alternate" type="application/rss+xml" title="Aaryan Shah, reading list" href="../reading/feed.xml" />
+    <link rel="icon" href="../assets/site/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="../assets/site/fonts/fraunces-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../assets/site/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../assets/site/site.css" />
+    <link rel="stylesheet" href="../assets/site/reading.css" />
+    <script>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add("js");
+        try {
+          var t = localStorage.getItem("theme");
+          if (t === "light" || t === "dark") d.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="reading-page">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="i-linkedin" viewBox="0 0 128 128"><path fill="currentColor" d="M116 3H12a8.91 8.91 0 00-9 8.8v104.42a8.91 8.91 0 009 8.78h104a8.93 8.93 0 009-8.81V11.77A8.93 8.93 0 00116 3zM39.17 107H21.06V48.73h18.11zm-9-66.21a10.5 10.5 0 1110.49-10.5 10.5 10.5 0 01-10.54 10.48zM107 107H88.89V78.65c0-6.75-.12-15.44-9.41-15.44s-10.87 7.36-10.87 15V107H50.53V48.73h17.36v8h.24c2.42-4.58 8.32-9.41 17.13-9.41C103.6 47.28 107 59.35 107 75z"/></symbol>
+      <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+        <symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></g></symbol>
+        <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></g></symbol>
+        <symbol id="i-arrow-ur" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></g></symbol>
+        <symbol id="i-arrow-r" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></g></symbol>
+        <symbol id="i-arrow-up" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></g></symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></g></symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></g></symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></g></symbol>
+        <symbol id="i-send" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></g></symbol>
+        <symbol id="i-database" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></g></symbol>
+        <symbol id="i-brain" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></g></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></g></symbol>
+        <symbol id="i-cloud" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></g></symbol>
+        <symbol id="i-paper" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></g></symbol>
+    </svg>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="progress" aria-hidden="true"><span></span></div>
+
+    <header class="nav" id="nav">
+      <div class="nav-inner">
+        <a class="brand" href="../" aria-label="Aaryan Shah, home">
+          <span class="brand-mark">AS</span>
+          <span class="brand-name">Aaryan Shah</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="../#about">About Me</a>
+          <a href="../#education">Education</a>
+          <a href="../#experience">Experience</a>
+          <a href="../#projects">Projects</a>
+          <a href="../#publications">Publications</a>
+          <a href="../reading/" class="is-active" aria-current="page">Reading</a>
+          <a href="../#contact">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode">
+            <svg class="i-sun" aria-hidden="true"><use href="#i-sun" /></svg>
+            <svg class="i-moon" aria-hidden="true"><use href="#i-moon" /></svg>
+          </button>
+          <a class="btn btn-sm btn-outline nav-resume" target="_blank" rel="noopener" href="https://drive.google.com/file/d/1o-hSDuU1eyi58XIbdlitKkuIcR2H6NIx/view?usp=sharing">
+            Résumé <svg aria-hidden="true"><use href="#i-arrow-ur" /></svg>
+          </a>
+          <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+            <span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <nav aria-label="Mobile">
+        <a href="../#about"><span>01</span>About Me</a>
+        <a href="../#education"><span>02</span>Education</a>
+        <a href="../#experience"><span>03</span>Experience</a>
+        <a href="../#projects"><span>04</span>Projects</a>
+        <a href="../#publications"><span>05</span>Publications</a>
+        <a href="../reading/"><span>06</span>Reading</a>
+        <a href="../#contact"><span>07</span>Contact</a>
+      </nav>
+      <a class="btn btn-solid" target="_blank" rel="noopener" href="https://drive.google.com/file/d/1o-hSDuU1eyi58XIbdlitKkuIcR2H6NIx/view?usp=sharing">Résumé <svg aria-hidden="true"><use href="#i-arrow-ur" /></svg></a>
+    </div>
+
+    <main id="main">
+      <section class="section reading-hero" id="top">
+        <div class="container">
+          <a class="crumb" href="../"><svg aria-hidden="true"><use href="#i-arrow-r" /></svg> Back to portfolio</a>
+          <header class="sec-head reveal">
+            <span class="sec-num">07</span>
+            <h1 class="sec-title">Reading <em>List</em></h1>
+          </header>
+          <div class="reading-intro reveal">
+            <p>Everything I have written or built to understand a topic properly. <b>Interactive guides</b> open in their own site with animations and simulations; <b>paper explainers</b> live here and cover a whole paper for a first-time reader in 30 minutes or less.</p>
+          </div>
+          <div class="reading-tools reveal">
+            <div class="filters" role="group" aria-label="Filter by type"><button class="filter is-on" type="button" data-filter="all" aria-pressed="true">All <span>7</span></button><button class="filter" type="button" data-filter="guide" aria-pressed="false">Interactive guides <span>5</span></button><button class="filter" type="button" data-filter="paper" aria-pressed="false">Paper explainers <span>1</span></button><button class="filter" type="button" data-filter="side" aria-pressed="false">Side reads <span>1</span></button></div>
+            <label class="search"><span class="visually-hidden">Search the reading list</span><input id="reading-search" type="search" placeholder="Search titles, topics, tags…" autocomplete="off" /></label>
+          </div>
+          <p class="reading-count mono muted" id="reading-count" aria-live="polite">7 items</p>
+          <div class="rgrid rgrid-list" id="reading-grid">
+<article class="rcard reveal" data-type="side" data-search="brain-rewiring reads  45 non-technical topics for a curious mind on one page, from attention and habits to deep time, animal minds and stoicism, with rabbit holes, tiny actions and 21 live demos. side read psychology history science philosophy">
+  <div class="rcard-top"><span class="rcard-type t-side">Side read</span><span class="rcard-meta">Oct 12, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-brain-rewiring.vercel.app/" target="_blank" rel="noopener">Brain-Rewiring Reads</a></h3>
+  <p class="rcard-summary">45 non-technical topics for a curious mind on one page, from attention and habits to deep time, animal minds and Stoicism, with rabbit holes, tiny actions and 21 live demos.</p>
+  <ul class="tags"><li>Psychology</li><li>History</li><li>Science</li><li>Philosophy</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open it <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="paper" data-search="attention is all you need the transformer, explained for a first-time reader the paper that replaced recurrence with self-attention and became the basis of bert, gpt and nearly every modern language model. every section, table and ablation, with live demos of attention, scaling, positional encoding and the learning-rate schedule. paper explainer transformers attention nlp deep learning">
+  <div class="rcard-top"><span class="rcard-type t-paper">Paper explainer</span><span class="rcard-meta">26 min read · Oct 12, 2026</span></div>
+  <h3 class="rcard-title"><a href="../reading/papers/attention-is-all-you-need/">Attention Is All You Need</a></h3>
+  <p class="rcard-sub">The Transformer, explained for a first-time reader</p><p class="rcard-summary">The paper that replaced recurrence with self-attention and became the basis of BERT, GPT and nearly every modern language model. Every section, table and ablation, with live demos of attention, scaling, positional encoding and the learning-rate schedule.</p>
+  <ul class="tags"><li>Transformers</li><li>Attention</li><li>NLP</li><li>Deep learning</li></ul>
+  <span class="link-arrow" aria-hidden="true">Read the explainer <svg><use href="#i-arrow-r" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="guide" data-search="tokens per second  a hands-on llm inference guide for people who have never used a gpu: latency and memory math, gpu utilization, batching, kv caches, quantization, speculative decoding, multi-gpu serving, cost and troubleshooting. interactive guide llms inference gpus">
+  <div class="rcard-top"><span class="rcard-type t-guide">Interactive guide</span><span class="rcard-meta">Oct 1, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-llm-inference.vercel.app/" target="_blank" rel="noopener">Tokens per Second</a></h3>
+  <p class="rcard-summary">A hands-on LLM inference guide for people who have never used a GPU: latency and memory math, GPU utilization, batching, KV caches, quantization, speculative decoding, multi-GPU serving, cost and troubleshooting.</p>
+  <ul class="tags"><li>LLMs</li><li>Inference</li><li>GPUs</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open the guide <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="guide" data-search="because you watched  recommender systems from a to z: collaborative filtering, two-tower retrieval, deep ranking, bandits, generative recommenders with semantic ids, and case studies of netflix, youtube, spotify, linkedin and more. interactive guide recommender systems ranking generative ai">
+  <div class="rcard-top"><span class="rcard-type t-guide">Interactive guide</span><span class="rcard-meta">Oct 1, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-recommender-systems.vercel.app/" target="_blank" rel="noopener">Because You Watched</a></h3>
+  <p class="rcard-summary">Recommender systems from A to Z: collaborative filtering, two-tower retrieval, deep ranking, bandits, generative recommenders with semantic IDs, and case studies of Netflix, YouTube, Spotify, LinkedIn and more.</p>
+  <ul class="tags"><li>Recommender systems</li><li>Ranking</li><li>Generative AI</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open the guide <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="guide" data-search="llms, token by token  how large language models work, from tokenization and attention to kv caches, pagedattention, speculative decoding, reasoning models and agents, with animations for every concept. interactive guide llms transformers inference">
+  <div class="rcard-top"><span class="rcard-type t-guide">Interactive guide</span><span class="rcard-meta">Sep 30, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-llm-fundamentals.vercel.app/" target="_blank" rel="noopener">LLMs, Token by Token</a></h3>
+  <p class="rcard-summary">How large language models work, from tokenization and attention to KV caches, PagedAttention, speculative decoding, reasoning models and agents, with animations for every concept.</p>
+  <ul class="tags"><li>LLMs</li><li>Transformers</li><li>Inference</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open the guide <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="guide" data-search="inside the gpu  how gpus work and why ai runs on them: warps, occupancy, the memory hierarchy, coalescing, the roofline model, tiled matrix multiply, tensor cores and multi-gpu communication. interactive guide gpus cuda performance">
+  <div class="rcard-top"><span class="rcard-type t-guide">Interactive guide</span><span class="rcard-meta">Sep 30, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-gpu-fundamentals.vercel.app/" target="_blank" rel="noopener">Inside the GPU</a></h3>
+  <p class="rcard-summary">How GPUs work and why AI runs on them: warps, occupancy, the memory hierarchy, coalescing, the roofline model, tiled matrix multiply, Tensor Cores and multi-GPU communication.</p>
+  <ul class="tags"><li>GPUs</li><li>CUDA</li><li>Performance</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open the guide <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="guide" data-search="noise to image  how diffusion models generate images and video, from the forward process and score functions to classifier-free guidance, latent diffusion, dit and flow matching, built around a real 2-d diffusion model. interactive guide diffusion generative ai computer vision">
+  <div class="rcard-top"><span class="rcard-type t-guide">Interactive guide</span><span class="rcard-meta">Sep 30, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-diffusion-models.vercel.app/" target="_blank" rel="noopener">Noise to Image</a></h3>
+  <p class="rcard-summary">How diffusion models generate images and video, from the forward process and score functions to classifier-free guidance, latent diffusion, DiT and flow matching, built around a real 2-D diffusion model.</p>
+  <ul class="tags"><li>Diffusion</li><li>Generative AI</li><li>Computer vision</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open the guide <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+          </div>
+          <p class="reading-empty" id="reading-empty" hidden>Nothing matches that search yet.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p class="footer-sig">Aaryan <em>Shah</em></p>
+        <p class="mono muted">© <span id="year">2026</span> · <a href="../reading/">Reading list</a> · <a href="../reading/feed.xml">RSS</a></p>
+        <a class="to-top" href="#top" aria-label="Back to top"><svg aria-hidden="true"><use href="#i-arrow-up" /></svg></a>
+      </div>
+    </footer>
+
+    <script src="../assets/site/site.js" defer></script>
+    <script src="../assets/site/reading.js" defer></script>
+  </body>
+</html>
