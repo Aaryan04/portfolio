@@ -12,7 +12,6 @@ date: 2026-10-12
 summary: The paper that replaced recurrence with self-attention and became the basis of BERT, GPT and nearly every modern language model. Every section, table and ablation, with live demos of attention, scaling, positional encoding and the learning-rate schedule.
 tags: Transformers, Attention, NLP, Deep learning
 prerequisites: A rough idea of what a neural network is. Everything else is explained as we go.
-featured: true
 ---
 
 ## TL;DR

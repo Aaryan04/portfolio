@@ -14,8 +14,7 @@
       "summary": "How large language models work, from tokenization and attention to KV caches, PagedAttention, speculative decoding, reasoning models and agents, with animations for every concept.",
       "url": "https://a2z-llm-fundamentals.vercel.app/",
       "tags": ["LLMs", "Transformers", "Inference"],
-      "date": "2026-09-30",
-      "featured": true
+      "date": "2026-09-30"
     },
     {
       "id": "gpu-fundamentals",
@@ -42,8 +41,7 @@
       "summary": "A hands-on LLM inference guide for people who have never used a GPU: latency and memory math, GPU utilization, batching, KV caches, quantization, speculative decoding, multi-GPU serving, cost and troubleshooting.",
       "url": "https://a2z-llm-inference.vercel.app/",
       "tags": ["LLMs", "Inference", "GPUs"],
-      "date": "2026-10-01",
-      "featured": true
+      "date": "2026-10-01"
     },
     {
       "id": "recommender-systems",
@@ -52,8 +50,7 @@
       "summary": "Recommender systems from A to Z: collaborative filtering, two-tower retrieval, deep ranking, bandits, generative recommenders with semantic IDs, and case studies of Netflix, YouTube, Spotify, LinkedIn and more.",
       "url": "https://a2z-recommender-systems.vercel.app/",
       "tags": ["Recommender systems", "Ranking", "Generative AI"],
-      "date": "2026-10-01",
-      "featured": true
+      "date": "2026-10-01"
     },
     {
       "id": "brain-rewiring-reads",

@@ -80,5 +80,5 @@ scripts/
 ```
 
 - `<slug>` is the title in lowercase kebab-case, for example `attention-is-all-you-need`. It becomes the URL: `/reading/papers/<slug>/`.
-- Start each article with front matter like `content/papers/attention-is-all-you-need.md`: `title`, `type`, `subtitle`, `authors`, `affiliation`, `venue`, `year`, `paper_url`, `paper_label`, `date` (publish date, YYYY-MM-DD), `summary`, `tags` (comma-separated), `prerequisites`, `featured`.
+- Start each article with front matter like `content/papers/attention-is-all-you-need.md`: `title`, `type`, `subtitle`, `authors`, `affiliation`, `venue`, `year`, `paper_url`, `paper_label`, `date` (publish date, YYYY-MM-DD), `summary`, `tags` (comma-separated), `prerequisites`.
 - Do not copy figures from papers unless their licence allows it. Redraw them as demos, tables or your own images.
