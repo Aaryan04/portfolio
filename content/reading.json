@@ -1,0 +1,69 @@
+{
+  "_comment": "Reading-list entries that live outside this repo (interactive guides, external posts). Paper explainers and blogs are picked up automatically from content/papers/*.md and content/blogs/*.md. After editing, run: python3 scripts/build_reading.py",
+  "types": {
+    "guide": { "label": "Interactive guide", "plural": "Interactive guides" },
+    "paper": { "label": "Paper explainer", "plural": "Paper explainers" },
+    "blog": { "label": "Blog post", "plural": "Blog posts" },
+    "side": { "label": "Side read", "plural": "Side reads" }
+  },
+  "items": [
+    {
+      "id": "llm-fundamentals",
+      "type": "guide",
+      "title": "LLMs, Token by Token",
+      "summary": "How large language models work, from tokenization and attention to KV caches, PagedAttention, speculative decoding, reasoning models and agents, with animations for every concept.",
+      "url": "https://a2z-llm-fundamentals.vercel.app/",
+      "tags": ["LLMs", "Transformers", "Inference"],
+      "date": "2026-09-30",
+      "featured": true
+    },
+    {
+      "id": "gpu-fundamentals",
+      "type": "guide",
+      "title": "Inside the GPU",
+      "summary": "How GPUs work and why AI runs on them: warps, occupancy, the memory hierarchy, coalescing, the roofline model, tiled matrix multiply, Tensor Cores and multi-GPU communication.",
+      "url": "https://a2z-gpu-fundamentals.vercel.app/",
+      "tags": ["GPUs", "CUDA", "Performance"],
+      "date": "2026-09-30"
+    },
+    {
+      "id": "diffusion-models",
+      "type": "guide",
+      "title": "Noise to Image",
+      "summary": "How diffusion models generate images and video, from the forward process and score functions to classifier-free guidance, latent diffusion, DiT and flow matching, built around a real 2-D diffusion model.",
+      "url": "https://a2z-diffusion-models.vercel.app/",
+      "tags": ["Diffusion", "Generative AI", "Computer vision"],
+      "date": "2026-09-30"
+    },
+    {
+      "id": "llm-inference",
+      "type": "guide",
+      "title": "Tokens per Second",
+      "summary": "A hands-on LLM inference guide for people who have never used a GPU: latency and memory math, GPU utilization, batching, KV caches, quantization, speculative decoding, multi-GPU serving, cost and troubleshooting.",
+      "url": "https://a2z-llm-inference.vercel.app/",
+      "tags": ["LLMs", "Inference", "GPUs"],
+      "date": "2026-10-01",
+      "featured": true
+    },
+    {
+      "id": "recommender-systems",
+      "type": "guide",
+      "title": "Because You Watched",
+      "summary": "Recommender systems from A to Z: collaborative filtering, two-tower retrieval, deep ranking, bandits, generative recommenders with semantic IDs, and case studies of Netflix, YouTube, Spotify, LinkedIn and more.",
+      "url": "https://a2z-recommender-systems.vercel.app/",
+      "tags": ["Recommender systems", "Ranking", "Generative AI"],
+      "date": "2026-10-01",
+      "featured": true
+    },
+    {
+      "id": "brain-rewiring-reads",
+      "type": "side",
+      "title": "Brain-Rewiring Reads",
+      "summary": "45 non-technical topics for a curious mind on one page, from attention and habits to deep time, animal minds and Stoicism, with rabbit holes, tiny actions and 21 live demos.",
+      "url": "https://a2z-brain-rewiring.vercel.app/",
+      "tags": ["Psychology", "History", "Science", "Philosophy"],
+      "date": "2026-10-12",
+      "interactive": true
+    }
+  ]
+}

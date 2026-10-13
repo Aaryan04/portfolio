@@ -76,7 +76,8 @@
   onScroll();
 
   /* ---------- Active section in nav ---------- */
-  var navLinks = Array.prototype.slice.call(document.querySelectorAll(".nav-links a"));
+  // only same-page anchors take part in the scroll spy (subpages link back to the home page)
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a[href^="#"]'));
   var sections = navLinks
     .map(function (a) {
       return document.querySelector(a.getAttribute("href"));

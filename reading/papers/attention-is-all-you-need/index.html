@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Attention Is All You Need, explained · Aaryan Shah</title>
+    <meta name="description" content="The paper that replaced recurrence with self-attention and became the basis of BERT, GPT and nearly every modern language model. Every section, table and ablation, with live demos of attention, scaling, positional encoding and the learning-rate schedule." />
+    <meta name="author" content="Aaryan Shah" />
+    <meta name="theme-color" content="#F5F0E8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E0C0A" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://aaryan04.github.io/portfolio/reading/papers/attention-is-all-you-need/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Attention Is All You Need, explained · Aaryan Shah" />
+    <meta property="og:description" content="The paper that replaced recurrence with self-attention and became the basis of BERT, GPT and nearly every modern language model. Every section, table and ablation, with live demos of attention, scaling, positional encoding and the learning-rate schedule." />
+    <meta property="og:url" content="https://aaryan04.github.io/portfolio/reading/papers/attention-is-all-you-need/" />
+    <meta property="og:image" content="https://aaryan04.github.io/portfolio/assets/site/img/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="alternate" type="application/rss+xml" title="Aaryan Shah, reading list" href="../../../reading/feed.xml" />
+    <link rel="icon" href="../../../assets/site/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="../../../assets/site/fonts/fraunces-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../../../assets/site/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../../assets/site/site.css" />
+    <link rel="stylesheet" href="../../../assets/site/reading.css" />
+    <link rel="stylesheet" href="../../../assets/site/vendor/katex/katex.min.css" />
+    <script>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add("js");
+        try {
+          var t = localStorage.getItem("theme");
+          if (t === "light" || t === "dark") d.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="reading-page">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="i-linkedin" viewBox="0 0 128 128"><path fill="currentColor" d="M116 3H12a8.91 8.91 0 00-9 8.8v104.42a8.91 8.91 0 009 8.78h104a8.93 8.93 0 009-8.81V11.77A8.93 8.93 0 00116 3zM39.17 107H21.06V48.73h18.11zm-9-66.21a10.5 10.5 0 1110.49-10.5 10.5 10.5 0 01-10.54 10.48zM107 107H88.89V78.65c0-6.75-.12-15.44-9.41-15.44s-10.87 7.36-10.87 15V107H50.53V48.73h17.36v8h.24c2.42-4.58 8.32-9.41 17.13-9.41C103.6 47.28 107 59.35 107 75z"/></symbol>
+      <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+        <symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></g></symbol>
+        <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></g></symbol>
+        <symbol id="i-arrow-ur" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></g></symbol>
+        <symbol id="i-arrow-r" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></g></symbol>
+        <symbol id="i-arrow-up" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></g></symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></g></symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></g></symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></g></symbol>
+        <symbol id="i-send" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></g></symbol>
+        <symbol id="i-database" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></g></symbol>
+        <symbol id="i-brain" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></g></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></g></symbol>
+        <symbol id="i-cloud" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></g></symbol>
+        <symbol id="i-paper" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></g></symbol>
+    </svg>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="progress" aria-hidden="true"><span></span></div>
+
+    <header class="nav" id="nav">
+      <div class="nav-inner">
+        <a class="brand" href="../../../" aria-label="Aaryan Shah, home">
+          <span class="brand-mark">AS</span>
+          <span class="brand-name">Aaryan Shah</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="../../../#about">About Me</a>
+          <a href="../../../#education">Education</a>
+          <a href="../../../#experience">Experience</a>
+          <a href="../../../#projects">Projects</a>
+          <a href="../../../#publications">Publications</a>
+          <a href="../../../reading/" class="is-active" aria-current="page">Reading</a>
+          <a href="../../../#contact">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode">
+            <svg class="i-sun" aria-hidden="true"><use href="#i-sun" /></svg>
+            <svg class="i-moon" aria-hidden="true"><use href="#i-moon" /></svg>
+          </button>
+          <a class="btn btn-sm btn-outline nav-resume" target="_blank" rel="noopener" href="https://drive.google.com/file/d/1o-hSDuU1eyi58XIbdlitKkuIcR2H6NIx/view?usp=sharing">
+            Résumé <svg aria-hidden="true"><use href="#i-arrow-ur" /></svg>
+          </a>
+          <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+            <span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <nav aria-label="Mobile">
+        <a href="../../../#about"><span>01</span>About Me</a>
+        <a href="../../../#education"><span>02</span>Education</a>
+        <a href="../../../#experience"><span>03</span>Experience</a>
+        <a href="../../../#projects"><span>04</span>Projects</a>
+        <a href="../../../#publications"><span>05</span>Publications</a>
+        <a href="../../../reading/"><span>06</span>Reading</a>
+        <a href="../../../#contact"><span>07</span>Contact</a>
+      </nav>
+      <a class="btn btn-solid" target="_blank" rel="noopener" href="https://drive.google.com/file/d/1o-hSDuU1eyi58XIbdlitKkuIcR2H6NIx/view?usp=sharing">Résumé <svg aria-hidden="true"><use href="#i-arrow-ur" /></svg></a>
+    </div>
+
+    <main id="main" class="article-main">
+      <div class="container">
+        <a class="crumb" href="../../../reading/"><svg aria-hidden="true"><use href="#i-arrow-r" /></svg> Reading list</a>
+        <header class="article-head" id="top">
+          <p class="article-kicker"><span class="rcard-type t-paper">Paper explainer</span><span class="mono muted">26 min read · Oct 12, 2026</span></p>
+          <h1 class="article-title">Attention Is All You Need</h1>
+          <p class="article-sub">The Transformer, explained for a first-time reader</p>
+          <dl class="article-facts"><div><dt>Authors</dt><dd>Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin</dd></div><div><dt>Affiliation</dt><dd>Google Brain, Google Research and the University of Toronto. All eight are listed as equal contributors, in random order.</dd></div><div><dt>Published</dt><dd>NeurIPS 2017</dd></div><div><dt>You need</dt><dd>A rough idea of what a neural network is. Everything else is explained as we go.</dd></div></dl>
+          <div class="pub-links"><a class="chip-link" href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-paper" /></svg>arXiv:1706.03762</a><a class="chip-link" href="../../../reading/"><svg aria-hidden="true"><use href="#i-arrow-r" /></svg>All readings</a></div>
+        </header>
+        <div class="article-grid">
+          <aside class="toc" aria-label="On this page">
+            <details class="toc-box" open><summary>On this page</summary><ol><li><a href="#tldr">TL;DR</a></li><li><a href="#how-this-article-is-organised">How this article is organised</a></li><li><a href="#1-the-problem-sequence-transduction-in-2017-1">1. The problem: sequence transduction in 2017 (§1)</a></li><li><a href="#2-what-came-before-2">2. What came before (§2)</a></li><li><a href="#3-the-architecture-3">3. The architecture (§3)</a></li><li><a href="#4-why-self-attention-4">4. Why self-attention? (§4)</a></li><li><a href="#5-training-5">5. Training (§5)</a></li><li><a href="#6-results-6">6. Results (§6)</a></li><li><a href="#7-peeking-inside-attention-visualisations-appendix">7. Peeking inside: attention visualisations (appendix)</a></li><li><a href="#8-the-authors-conclusion-7">8. The authors&#x27; conclusion (§7)</a></li><li><a href="#9-reading-it-today">9. Reading it today</a></li><li><a href="#10-glossary">10. Glossary</a></li><li><a href="#11-cheat-sheet-the-numbers-to-remember">11. Cheat sheet: the numbers to remember</a></li></ol></details>
+          </aside>
+          <article class="prose">
+<h2 id="tldr"><a class="anchor" href="#tldr" aria-label="Link to this section">#</a>TL;DR</h2>
+<ul>
+<li>In 2017, the best translation systems read a sentence <strong>one word at a time</strong> using recurrent neural networks (RNNs). That made them slow to train, because step 50 had to wait for step 49.</li>
+<li>The paper proposes the <strong>Transformer</strong>, which drops recurrence completely. Every word looks at every other word at once through <strong>attention</strong>, so a whole sentence is processed in parallel.</li>
+<li>The core operation is <strong>scaled dot-product attention</strong>, <span class="math-inline">$\mathrm{softmax}(QK^\top/\sqrt{d_k})V$</span>, run as several <strong>heads</strong> in parallel. <strong>Positional encodings</strong> tell the model about word order, since attention by itself ignores order.</li>
+<li>On English-to-German translation (WMT 2014) it scored <strong>28.4 BLEU</strong>, more than 2 points above the best previous systems including ensembles. On English-to-French it set a single-model record of <strong>41.8 BLEU</strong>. Training took <strong>3.5 days on 8 GPUs</strong>, a fraction of previous costs.</li>
+<li>It also did well on English <strong>constituency parsing</strong>, a very different task, with little tuning. This architecture later became the basis of BERT, GPT and almost every large language model.</li>
+</ul>
+<h2 id="how-this-article-is-organised"><a class="anchor" href="#how-this-article-is-organised" aria-label="Link to this section">#</a>How this article is organised</h2>
+<p>It follows the paper's own order, adding background where a first-time reader needs it. Section numbers in brackets, like (§3.2), point to the paper.</p>
+<ol>
+<li>The problem and what came before (§1–2)</li>
+<li>The architecture, piece by piece (§3)</li>
+<li>Why self-attention is a good idea (§4)</li>
+<li>How it was trained (§5)</li>
+<li>Results, ablations and parsing (§6)</li>
+<li>Attention visualisations (appendix)</li>
+<li>The authors' conclusion (§7), then a short "reading it today" note, a glossary and a cheat sheet</li>
+</ol>
+<hr />
+<h2 id="1-the-problem-sequence-transduction-in-2017-1"><a class="anchor" href="#1-the-problem-sequence-transduction-in-2017-1" aria-label="Link to this section">#</a>1. The problem: sequence transduction in 2017 (§1)</h2>
+<p><strong>Sequence transduction</strong> means turning one sequence into another: a sentence in English into one in German, speech into text, a sentence into its grammatical parse. The paper's main test is <strong>machine translation</strong>.</p>
+<h3 id="encoder-decoder-models">Encoder-decoder models</h3>
+<p>The standard design was an <strong>encoder-decoder</strong>:</p>
+<ul>
+<li>The <strong>encoder</strong> reads the input sentence and turns it into vectors (lists of numbers) that represent its meaning.</li>
+<li>The <strong>decoder</strong> produces the output one token at a time. Each new token is predicted from the encoder's vectors and from the tokens already produced. Feeding a model's own previous outputs back in like this is called being <strong>auto-regressive</strong>.</li>
+</ul>
+<p>Both halves were usually <strong>recurrent neural networks</strong>, mostly LSTMs or GRUs. An RNN keeps a hidden state <span class="math-inline">$h_t$</span> and updates it once per word: <span class="math-inline">$h_t = f(h_{t-1}, x_t)$</span>. To compute the state for word 50, you need the state for word 49, and so on back to word 1.</p>
+<p>That sequential dependency is the problem the paper attacks. GPUs are fast because they do thousands of things in parallel, but an RNN must take its steps in order <strong>within</strong> each sentence. The paper notes that this "precludes parallelization within training examples, which becomes critical at longer sequence lengths", since memory limits how many sentences you can batch together. Tricks such as factorised layers and conditional computation sped RNNs up, but "the fundamental constraint of sequential computation, however, remains."</p>
+<h3 id="attention-before-the-transformer">Attention, before the Transformer</h3>
+<p><strong>Attention</strong> already existed. Introduced for translation by Bahdanau, Cho and Bengio in 2014, it lets the decoder, at each output step, look back over <em>all</em> encoder states and take a weighted average of them, with weights saying how relevant each input word is right now. When producing the German verb, the decoder can focus on the English verb even if it was 20 words earlier.</p>
+<p>Attention lets a model connect words "without regard to their distance". But until this paper it was almost always added <em>on top of</em> an RNN. The paper's question is: what if attention is the only mechanism?</p>
+<blockquote>
+<p><strong>The claim in one line:</strong> "We propose the Transformer, a model architecture eschewing recurrence and instead relying entirely on an attention mechanism to draw global dependencies between input and output." It reached a new state of the art in translation "after being trained for as little as twelve hours on eight P100 GPUs."</p>
+</blockquote>
+<h2 id="2-what-came-before-2"><a class="anchor" href="#2-what-came-before-2" aria-label="Link to this section">#</a>2. What came before (§2)</h2>
+<p>Others had also tried to remove the sequential bottleneck, mainly with <strong>convolutional neural networks</strong> (CNNs), which process all positions in parallel: the Extended Neural GPU, <strong>ByteNet</strong> and <strong>ConvS2S</strong>. A convolution only looks at a small window of neighbours, though. To connect two distant words you must stack layers. The number of operations needed to relate two positions grows <strong>linearly</strong> with their distance in ConvS2S and <strong>logarithmically</strong> in ByteNet. That makes long-range dependencies harder to learn.</p>
+<p>In the Transformer, any two positions are connected in a <strong>constant</strong> number of operations. The paper admits a cost: an attention output is a weighted <em>average</em>, which blurs detail ("reduced effective resolution"). Its fix is <strong>multi-head attention</strong>, covered below.</p>
+<p>The paper also credits earlier uses of <strong>self-attention</strong>, meaning attention between positions of the <em>same</em> sequence. It had been used for reading comprehension, abstractive summarisation, textual entailment and sentence representations. It also cites end-to-end memory networks, which use recurrent attention for question answering. The novelty claimed is that the Transformer is "the first transduction model relying entirely on self-attention to compute representations of its input and output without using sequence-aligned RNNs or convolution."</p>
+<hr />
+<h2 id="3-the-architecture-3"><a class="anchor" href="#3-the-architecture-3" aria-label="Link to this section">#</a>3. The architecture (§3)</h2>
+<p>The Transformer keeps the encoder-decoder shape. The encoder maps input tokens <span class="math-inline">$(x_1, \dots, x_n)$</span> to vectors <span class="math-inline">$\mathbf{z} = (z_1, \dots, z_n)$</span>. Given <span class="math-inline">$\mathbf{z}$</span>, the decoder generates the output <span class="math-inline">$(y_1, \dots, y_m)$</span> one token at a time, auto-regressively.</p>
+<figure class="paper-demo" data-demo="architecture"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>The Transformer, after the paper's Figure 1. Click any block to see what it does and where the paper describes it.</figcaption></figure>
+<h3 id="31-the-encoder-and-decoder-stacks-31">3.1 The encoder and decoder stacks (§3.1)</h3>
+<p><strong>Encoder.</strong> A stack of <span class="math-inline">$N = 6$</span> identical layers. Each layer has two <strong>sub-layers</strong>:</p>
+<ol>
+<li>multi-head <strong>self-attention</strong>, where every input position looks at every input position;</li>
+<li>a simple position-wise <strong>feed-forward network</strong>, applied to each position separately.</li>
+</ol>
+<p>Each sub-layer is wrapped in a <strong>residual connection</strong> followed by <strong>layer normalisation</strong>:</p>
+<div class="math-display">$$\text{output} = \mathrm{LayerNorm}\big(x + \mathrm{Sublayer}(x)\big)$$</div>
+<ul>
+<li>A <strong>residual connection</strong> adds the sub-layer's input back to its output. The layer only has to learn a <em>change</em> to its input, which makes deep stacks much easier to train. This idea came from ResNets in image recognition.</li>
+<li><strong>Layer normalisation</strong> rescales each position's vector to zero mean and unit variance (with learned scale and shift), which keeps values in a stable range.</li>
+</ul>
+<p>To make the residual additions work, every sub-layer and the embedding layers output vectors of the same size, <span class="math-inline">$d_{\text{model}} = 512$</span>.</p>
+<p><strong>Decoder.</strong> Also <span class="math-inline">$N = 6$</span> identical layers, with a third sub-layer in between: multi-head attention over the <strong>encoder's output</strong>. This is where the decoder "reads" the source sentence. The decoder's self-attention is <strong>masked</strong> so that position <span class="math-inline">$i$</span> cannot see positions after <span class="math-inline">$i$</span>. Because the output is also shifted right by one position, the prediction for position <span class="math-inline">$i$</span> depends only on outputs before <span class="math-inline">$i$</span>. During training, the model sees the whole target sentence at once, but each position must predict its next token without peeking ahead.</p>
+<h3 id="32-attention-32">3.2 Attention (§3.2)</h3>
+<p>The paper defines attention as "mapping a query and a set of key-value pairs to an output". The output is a weighted sum of the <strong>values</strong>, and each weight comes from how well the <strong>query</strong> matches the corresponding <strong>key</strong>.</p>
+<blockquote>
+<p><strong>Analogy:</strong> A library catalogue. Your question is the <strong>query</strong>. Each book has a catalogue card, its <strong>key</strong>, and the book itself, its <strong>value</strong>. Attention compares your query with every card, then hands you a blend of all the books, mostly made of those whose cards matched best. Unlike a real library, the match is soft: you get 58% of one book, 28% of another and 14% of a third.</p>
+</blockquote>
+<p>In self-attention, the queries, keys and values are all computed from the same sentence. Each word asks "which other words matter for understanding me?", and its new representation is a blend of the words it attends to.</p>
+<h4 id="scaled-dot-product-attention-321">Scaled dot-product attention (§3.2.1)</h4>
+<p>Stack the queries into a matrix <span class="math-inline">$Q$</span>, the keys into <span class="math-inline">$K$</span> and the values into <span class="math-inline">$V$</span>. Queries and keys have dimension <span class="math-inline">$d_k$</span>; values have dimension <span class="math-inline">$d_v$</span>.</p>
+<div class="math-display">$$\mathrm{Attention}(Q, K, V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right) V$$</div>
+<p>Reading it from the inside out:</p>
+<ol>
+<li><span class="math-inline">$QK^\top$</span>: the dot product of every query with every key, giving a matrix of match scores. For <span class="math-inline">$n$</span> words, it is <span class="math-inline">$n \times n$</span>.</li>
+<li><span class="math-inline">$\div \sqrt{d_k}$</span>: scale the scores down (explained just below).</li>
+<li><strong>softmax</strong>, row by row: turn each row of scores into positive weights that sum to 1.</li>
+<li><span class="math-inline">$\times V$</span>: each output is the weighted average of the value vectors.</li>
+</ol>
+<p><strong>A tiny worked example.</strong> Take the sentence "the animal … street … it" and focus on the query for "it", with <span class="math-inline">$d_k = 2$</span>. Suppose:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>word</th>
+<th>key</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>the</td>
+<td>(0, 1)</td>
+<td>(1, 0)</td>
+</tr>
+<tr>
+<td>animal</td>
+<td>(2, 0)</td>
+<td>(0, 1)</td>
+</tr>
+<tr>
+<td>street</td>
+<td>(1, 1)</td>
+<td>(1, 1)</td>
+</tr>
+</tbody>
+</table></div>
+<p>With query <span class="math-inline">$q_{\text{it}} = (1, 0)$</span>:</p>
+<ul>
+<li>dot products with the keys are 0, 2 and 1;</li>
+<li>divided by <span class="math-inline">$\sqrt{2}$</span>, they become 0, 1.41 and 0.71;</li>
+<li>softmax turns those into weights of <strong>0.14, 0.58 and 0.28</strong>, so "it" attends mostly to "animal";</li>
+<li>the output is <span class="math-inline">$0.14\,(1,0) + 0.58\,(0,1) + 0.28\,(1,1) = (0.42,\ 0.86)$</span>, a new vector for "it" that now carries mostly "animal" information.</li>
+</ul>
+<p>In a real model, queries, keys and values are learned, so the network discovers what "matching" should mean.</p>
+<figure class="paper-demo" data-demo="attention"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>The worked example, live. Rotate the query for "it" and watch the attention weights and the output vector change. Toggle the √d_k scaling to see how it softens the weights.</figcaption></figure>
+<p><strong>Why scale by <span class="math-inline">$\sqrt{d_k}$</span>?</strong> The two common attention types were <em>additive</em> attention, which scores with a small one-layer network, and <em>dot-product</em> attention. Dot-product attention is much faster and uses less memory because it is just matrix multiplication, which GPUs are built for. But for large <span class="math-inline">$d_k$</span>, unscaled dot-product attention did worse than additive attention. The authors' explanation: if the components of <span class="math-inline">$q$</span> and <span class="math-inline">$k$</span> are independent with mean 0 and variance 1, their dot product <span class="math-inline">$q \cdot k = \sum_{i=1}^{d_k} q_i k_i$</span> has mean 0 and <strong>variance <span class="math-inline">$d_k$</span></strong>. With <span class="math-inline">$d_k = 64$</span>, scores have a standard deviation of about 8. Softmax over numbers that spread out becomes nearly one-hot: one weight close to 1, the rest close to 0. In that region its gradients are tiny, so learning stalls. Dividing by <span class="math-inline">$\sqrt{d_k}$</span> brings the variance back to 1.</p>
+<figure class="paper-demo" data-demo="scaling"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>Why the paper scales by √d_k. Eight random keys are scored against a random query with d_k dimensions. Raise d_k: without scaling, softmax collapses onto one key; with scaling, the weights stay spread out.</figcaption></figure>
+<p><strong>Masking.</strong> In the decoder, a position must not attend to future positions. The fix is to set the scores for illegal connections to <span class="math-inline">$-\infty$</span> before the softmax. Since <span class="math-inline">$e^{-\infty} = 0$</span>, those positions get exactly zero weight.</p>
+<h4 id="multi-head-attention-322">Multi-head attention (§3.2.2)</h4>
+<p>One attention operation produces one weighted average per position. But a word may need several kinds of information at once: its subject, its object, the word before it. Averaging them all into one blend loses detail. The paper's answer is to run several attentions in parallel, each with its own learned projections:</p>
+<p><div class="math-display">$$\mathrm{MultiHead}(Q, K, V) = \mathrm{Concat}(\mathrm{head}_1, \dots, \mathrm{head}_h)\, W^O$$</div>
+<div class="math-display">$$\mathrm{head}_i = \mathrm{Attention}(Q W_i^Q,\ K W_i^K,\ V W_i^V)$$</div></p>
+<ul>
+<li>Each head projects the <span class="math-inline">$d_{\text{model}}$</span>-dimensional input down to <span class="math-inline">$d_k$</span> dimensions for queries and keys and <span class="math-inline">$d_v$</span> for values. The projection matrices are <span class="math-inline">$W_i^Q, W_i^K \in \mathbb{R}^{d_{\text{model}} \times d_k}$</span> and <span class="math-inline">$W_i^V \in \mathbb{R}^{d_{\text{model}} \times d_v}$</span>.</li>
+<li>The <span class="math-inline">$h$</span> head outputs are concatenated and projected back to <span class="math-inline">$d_{\text{model}}$</span> by <span class="math-inline">$W^O \in \mathbb{R}^{h d_v \times d_{\text{model}}}$</span>.</li>
+<li>The paper uses <span class="math-inline">$h = 8$</span> heads with <span class="math-inline">$d_k = d_v = d_{\text{model}}/h = 64$</span>. Because each head is smaller, total compute is similar to one big head with full dimensionality.</li>
+</ul>
+<p>In the paper's words: "Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this."</p>
+<blockquote>
+<p><strong>Analogy:</strong> One reader highlighting a page with one colour, versus eight readers each highlighting for one thing (names, verbs, dates, pronouns), then combining their notes.</p>
+</blockquote>
+<h4 id="three-ways-the-transformer-uses-attention-323">Three ways the Transformer uses attention (§3.2.3)</h4>
+<ol>
+<li><strong>Encoder self-attention.</strong> Queries, keys and values all come from the previous encoder layer. Every input position can attend to every input position.</li>
+<li><strong>Decoder (masked) self-attention.</strong> Each output position attends to itself and earlier output positions only, which preserves the auto-regressive property.</li>
+<li><strong>Encoder-decoder attention.</strong> Queries come from the decoder; keys and values come from the encoder's final output. Every decoder position can look at the whole source sentence, like the RNN attention described in section 1.</li>
+</ol>
+<h3 id="33-position-wise-feed-forward-networks-33">3.3 Position-wise feed-forward networks (§3.3)</h3>
+<p>After attention mixes information <em>between</em> positions, each position is processed <em>on its own</em> by the same small two-layer network:</p>
+<div class="math-display">$$\mathrm{FFN}(x) = \max(0,\ x W_1 + b_1)\, W_2 + b_2$$</div>
+<p><span class="math-inline">$\max(0, \cdot)$</span> is the ReLU activation. The inner layer is wider, <span class="math-inline">$d_{ff} = 2048$</span>, with input and output <span class="math-inline">$d_{\text{model}} = 512$</span>. The same weights are used at every position within a layer, but each layer has its own. The paper notes this is equivalent to two convolutions with kernel size 1.</p>
+<h3 id="34-embeddings-and-softmax-34">3.4 Embeddings and softmax (§3.4)</h3>
+<ul>
+<li><strong>Embeddings:</strong> each input and output token is turned into a learned vector of size <span class="math-inline">$d_{\text{model}}$</span>.</li>
+<li><strong>Output:</strong> the decoder's final vectors go through a learned linear layer and a <strong>softmax</strong>, which gives a probability for every token in the vocabulary as the next token.</li>
+<li><strong>Weight sharing:</strong> the same matrix is used for the input embedding, the output embedding and the pre-softmax linear layer, which saves parameters.</li>
+<li><strong>Scaling:</strong> in the embedding layers, the weights are multiplied by <span class="math-inline">$\sqrt{d_{\text{model}}}$</span>.</li>
+</ul>
+<h3 id="35-positional-encoding-35">3.5 Positional encoding (§3.5)</h3>
+<p>Attention compares every word with every other word but has <strong>no idea of order</strong>. Shuffle the input words and each word's set of attention scores stays the same. Since "dog bites man" and "man bites dog" mean different things, the model needs position information. The Transformer adds a <strong>positional encoding</strong> vector to each token's embedding at the bottom of both stacks. The paper uses fixed sine and cosine waves of different frequencies:</p>
+<div class="math-display">$$PE_{(pos,\,2i)} = \sin\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \qquad PE_{(pos,\,2i+1)} = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)$$</div>
+<p><span class="math-inline">$pos$</span> is the position in the sentence and <span class="math-inline">$i$</span> indexes the dimension. Each pair of dimensions is a sine and cosine pair at one frequency. The wavelengths form a geometric progression from <span class="math-inline">$2\pi$</span> to <span class="math-inline">$10000 \cdot 2\pi$</span>.</p>
+<blockquote>
+<p><strong>Analogy:</strong> A clock with many hands. The second hand spins fast and tells you fine position; the hour hand moves slowly and tells you coarse position. Together, the hands give every moment a unique reading. Each sine/cosine pair is one hand.</p>
+</blockquote>
+<p><strong>Why sinusoids?</strong> The authors hypothesised that this makes it easy to attend by <em>relative</em> position. For any fixed offset <span class="math-inline">$k$</span>, <span class="math-inline">$PE_{pos+k}$</span> is a <strong>linear function</strong> of <span class="math-inline">$PE_{pos}$</span>: for each frequency <span class="math-inline">$\omega$</span>, shifting by <span class="math-inline">$k$</span> is just a rotation of the <span class="math-inline">$(\sin \omega\, pos, \cos \omega\, pos)$</span> pair by angle <span class="math-inline">$\omega k$</span>. They also tried <strong>learned</strong> positional embeddings, one learned vector per position, and got nearly identical results (Table 3, row E). They kept sinusoids because they "may allow the model to extrapolate to sequence lengths longer than the ones encountered during training."</p>
+<figure class="paper-demo" data-demo="positional"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>The sinusoidal positional encodings for the first 64 positions of a 128-dimensional model. Each row is one position; early dimensions oscillate quickly, later ones slowly. Hover or tap a row to see its values.</figcaption></figure>
+<hr />
+<h2 id="4-why-self-attention-4"><a class="anchor" href="#4-why-self-attention-4" aria-label="Link to this section">#</a>4. Why self-attention? (§4)</h2>
+<p>The paper compares self-attention layers with recurrent and convolutional layers on three criteria:</p>
+<ol>
+<li><strong>Computation per layer:</strong> how much work one layer takes.</li>
+<li><strong>Sequential operations:</strong> how many steps must happen one after another, which limits parallelism.</li>
+<li><strong>Maximum path length:</strong> how many steps a signal must travel between the two most distant positions. Shorter paths make long-range dependencies easier to learn.</li>
+</ol>
+<p>Here <span class="math-inline">$n$</span> is the sequence length, <span class="math-inline">$d$</span> the representation dimension, <span class="math-inline">$k$</span> the convolution kernel size and <span class="math-inline">$r$</span> the neighbourhood size for restricted attention.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Layer type</th>
+<th>Complexity per layer</th>
+<th>Sequential operations</th>
+<th>Maximum path length</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Self-attention</td>
+<td><span class="math-inline">$O(n^2 \cdot d)$</span></td>
+<td><span class="math-inline">$O(1)$</span></td>
+<td><span class="math-inline">$O(1)$</span></td>
+</tr>
+<tr>
+<td>Recurrent</td>
+<td><span class="math-inline">$O(n \cdot d^2)$</span></td>
+<td><span class="math-inline">$O(n)$</span></td>
+<td><span class="math-inline">$O(n)$</span></td>
+</tr>
+<tr>
+<td>Convolutional</td>
+<td><span class="math-inline">$O(k \cdot n \cdot d^2)$</span></td>
+<td><span class="math-inline">$O(1)$</span></td>
+<td><span class="math-inline">$O(\log_k n)$</span></td>
+</tr>
+<tr>
+<td>Self-attention (restricted)</td>
+<td><span class="math-inline">$O(r \cdot n \cdot d)$</span></td>
+<td><span class="math-inline">$O(1)$</span></td>
+<td><span class="math-inline">$O(n/r)$</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 1 of the paper.</em></p>
+<p>How to read it:</p>
+<ul>
+<li><strong>Self-attention connects everything in one step:</strong> path length <span class="math-inline">$O(1)$</span>, and all positions are computed in parallel.</li>
+<li><strong>Cost:</strong> self-attention is quadratic in <span class="math-inline">$n$</span>, recurrence quadratic in <span class="math-inline">$d$</span>. Self-attention is cheaper whenever <span class="math-inline">$n &lt; d$</span>. That is the usual case for sentences in translation: a few dozen subword tokens versus <span class="math-inline">$d = 512$</span>.</li>
+<li><strong>Very long sequences:</strong> attention could be <strong>restricted</strong> to a window of <span class="math-inline">$r$</span> neighbours, at the price of longer paths. The paper leaves this for future work.</li>
+<li><strong>Convolutions:</strong> one layer with <span class="math-inline">$k &lt; n$</span> does not connect all pairs. You need a stack of <span class="math-inline">$O(n/k)$</span> ordinary layers or <span class="math-inline">$O(\log_k n)$</span> dilated ones, and convolutions are generally more expensive than recurrent layers by a factor of <span class="math-inline">$k$</span>. Separable convolutions cut the cost to <span class="math-inline">$O(k \cdot n \cdot d + n \cdot d^2)$</span>, but even with <span class="math-inline">$k = n$</span>, that equals the cost of a self-attention layer plus a feed-forward layer, which is exactly what the Transformer uses.</li>
+</ul>
+<p><strong>A bonus: interpretability.</strong> You can look at attention weights to see what the model attends to. The authors found that individual heads learn different tasks, many of which "appear to exhibit behavior related to the syntactic and semantic structure of the sentences" (see section 9 below).</p>
+<hr />
+<h2 id="5-training-5"><a class="anchor" href="#5-training-5" aria-label="Link to this section">#</a>5. Training (§5)</h2>
+<h3 id="data-and-batching-51">Data and batching (§5.1)</h3>
+<ul>
+<li><strong>English-German:</strong> the WMT 2014 dataset, about <strong>4.5 million sentence pairs</strong>. Text was split into subword units with <strong>byte-pair encoding (BPE)</strong>, using a shared source and target vocabulary of about <strong>37,000 tokens</strong>. BPE repeatedly merges the most frequent pairs of characters or pieces, so common words stay whole and rare words become several pieces.</li>
+<li><strong>English-French:</strong> the much larger WMT 2014 set, <strong>36 million sentences</strong>, with a <strong>32,000</strong> word-piece vocabulary.</li>
+<li><strong>Batching:</strong> sentence pairs were grouped by similar length. Each training batch held roughly <strong>25,000 source tokens and 25,000 target tokens</strong>.</li>
+</ul>
+<h3 id="hardware-and-schedule-52">Hardware and schedule (§5.2)</h3>
+<p>One machine with <strong>8 NVIDIA P100 GPUs</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Time per step</th>
+<th>Steps</th>
+<th>Wall-clock time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base</td>
+<td>~0.4 s</td>
+<td>100,000</td>
+<td>~12 hours</td>
+</tr>
+<tr>
+<td>Big</td>
+<td>~1.0 s</td>
+<td>300,000</td>
+<td>3.5 days</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="optimiser-and-learning-rate-schedule-53">Optimiser and learning-rate schedule (§5.3)</h3>
+<p>The optimiser was <strong>Adam</strong> with <span class="math-inline">$\beta_1 = 0.9$</span>, <span class="math-inline">$\beta_2 = 0.98$</span> and <span class="math-inline">$\epsilon = 10^{-9}$</span>. The learning rate follows a now-famous schedule:</p>
+<div class="math-display">$$\text{lrate} = d_{\text{model}}^{-0.5} \cdot \min\!\big(\text{step}^{-0.5},\ \text{step} \cdot \text{warmup\_steps}^{-1.5}\big), \qquad \text{warmup\_steps} = 4000$$</div>
+<ul>
+<li>During the first 4,000 steps, the rate rises <strong>linearly</strong> (warm-up).</li>
+<li>After that, it decays in proportion to <span class="math-inline">$1/\sqrt{\text{step}}$</span>.</li>
+<li>With <span class="math-inline">$d_{\text{model}} = 512$</span>, it peaks at about <span class="math-inline">$7 \times 10^{-4}$</span> at step 4,000 and falls to about <span class="math-inline">$1.4 \times 10^{-4}$</span> by step 100,000.</li>
+<li>Warm-up helps because early updates, made while the model is still random, can be large and destabilising.</li>
+</ul>
+<figure class="paper-demo" data-demo="schedule"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>The paper's learning-rate schedule. Change the warm-up length and model width to see how the peak and the decay move.</figcaption></figure>
+<h3 id="regularisation-54">Regularisation (§5.4)</h3>
+<ul>
+<li><strong>Residual dropout.</strong> Dropout randomly zeroes a fraction of activations during training so the network cannot rely on any single path. It is applied to the output of each sub-layer before the residual addition and normalisation, and to the sum of embeddings and positional encodings. Rate <span class="math-inline">$P_{\text{drop}} = 0.1$</span> for the base model.</li>
+<li><strong>Label smoothing</strong> with <span class="math-inline">$\epsilon_{ls} = 0.1$</span>. Instead of training toward 100% probability on the correct token, the target puts 90% on it and spreads 10% over the rest. In the paper's words, this "hurts perplexity, as the model learns to be more unsure, but improves accuracy and BLEU score."</li>
+</ul>
+<hr />
+<h2 id="6-results-6"><a class="anchor" href="#6-results-6" aria-label="Link to this section">#</a>6. Results (§6)</h2>
+<h3 id="61-machine-translation-61">6.1 Machine translation (§6.1)</h3>
+<p><strong>BLEU</strong> is the standard automatic translation score. It measures how many word sequences of length 1 to 4 in the system's output also appear in human reference translations, with a penalty for outputs that are too short. Higher is better; gains of 1 to 2 points were considered significant at the time.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>EN→DE BLEU</th>
+<th>EN→FR BLEU</th>
+<th>Training cost (FLOPs)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ByteNet</td>
+<td>23.75</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GNMT + RL</td>
+<td>24.6</td>
+<td>39.92</td>
+<td></td>
+</tr>
+<tr>
+<td>ConvS2S</td>
+<td>25.16</td>
+<td>40.46</td>
+<td></td>
+</tr>
+<tr>
+<td>MoE</td>
+<td>26.03</td>
+<td>40.56</td>
+<td></td>
+</tr>
+<tr>
+<td>GNMT + RL (ensemble)</td>
+<td>26.30</td>
+<td>41.16</td>
+<td></td>
+</tr>
+<tr>
+<td>ConvS2S (ensemble)</td>
+<td>26.36</td>
+<td>41.29</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Transformer (base)</strong></td>
+<td><strong>27.3</strong></td>
+<td><strong>38.1</strong></td>
+<td><span class="math-inline">$3.3 \times 10^{18}$</span></td>
+</tr>
+<tr>
+<td><strong>Transformer (big)</strong></td>
+<td><strong>28.4</strong></td>
+<td><strong>41.8</strong></td>
+<td><span class="math-inline">$2.3 \times 10^{19}$</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Selected rows of Table 2, tested on newstest2014. An ensemble combines several separately trained models, which usually adds accuracy at a large cost.</em></p>
+<ul>
+<li><strong>English-German:</strong> the big Transformer beats the best previously reported models, <strong>including ensembles, by more than 2.0 BLEU</strong>. Even the base model surpasses all previous models and ensembles, at a fraction of their training cost.</li>
+<li><strong>English-French:</strong> the big model reaches <strong>41.8</strong>, a new single-model state of the art, at less than a quarter of the previous best model's training cost. The current arXiv version reports 41.8; some earlier printings, including the conference proceedings, report 41.0. The English-French big model used <span class="math-inline">$P_{\text{drop}} = 0.1$</span> instead of 0.3.</li>
+<li><strong>Training cost:</strong> estimated as training time × number of GPUs × an estimate of each GPU's sustained single-precision throughput. The paper uses 2.8, 3.7, 6.0 and 9.5 TFLOPS for the K80, K40, M40 and P100.</li>
+</ul>
+<p>Decoding details matter for these numbers:</p>
+<ul>
+<li><strong>Checkpoint averaging:</strong> the base models use the average of the last 5 checkpoints, saved 10 minutes apart; the big models average the last 20.</li>
+<li><strong>Beam search</strong> with beam size 4: instead of greedily taking the most likely token at each step, keep the 4 best partial translations.</li>
+<li><strong>Length penalty</strong> <span class="math-inline">$\alpha = 0.6$</span>, so long translations are not unfairly penalised.</li>
+<li><strong>Output length:</strong> at most the input length + 50 tokens, stopping early when possible.</li>
+</ul>
+<p>The beam size and length penalty were chosen on the development set.</p>
+<h3 id="62-what-matters-model-variations-62">6.2 What matters: model variations (§6.2)</h3>
+<p>To see which components matter, the authors changed the base model one piece at a time. They measured perplexity (PPL, lower is better) and BLEU on the English-German development set (newstest2013), without checkpoint averaging. The perplexities are per word-piece, so they should not be compared with per-word perplexities.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Variation</th>
+<th>PPL</th>
+<th>BLEU</th>
+<th>Params</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Base</strong> (<span class="math-inline">$N{=}6$</span>, <span class="math-inline">$d_{\text{model}}{=}512$</span>, <span class="math-inline">$d_{ff}{=}2048$</span>, <span class="math-inline">$h{=}8$</span>, <span class="math-inline">$d_k{=}d_v{=}64$</span>, dropout 0.1, <span class="math-inline">$\epsilon_{ls}{=}0.1$</span>, 100K steps)</td>
+<td>4.92</td>
+<td>25.8</td>
+<td>65M</td>
+</tr>
+<tr>
+<td>(A) 1 head, <span class="math-inline">$d_k{=}512$</span></td>
+<td>5.29</td>
+<td>24.9</td>
+<td></td>
+</tr>
+<tr>
+<td>(A) 32 heads, <span class="math-inline">$d_k{=}16$</span></td>
+<td>5.01</td>
+<td>25.4</td>
+<td></td>
+</tr>
+<tr>
+<td>(B) <span class="math-inline">$d_k{=}16$</span> (8 heads)</td>
+<td>5.16</td>
+<td>25.1</td>
+<td>58M</td>
+</tr>
+<tr>
+<td>(C) <span class="math-inline">$d_{\text{model}}{=}1024$</span></td>
+<td>4.66</td>
+<td>26.0</td>
+<td>168M</td>
+</tr>
+<tr>
+<td>(C) <span class="math-inline">$d_{ff}{=}4096$</span></td>
+<td>4.75</td>
+<td>26.2</td>
+<td>90M</td>
+</tr>
+<tr>
+<td>(D) no dropout</td>
+<td>5.77</td>
+<td>24.6</td>
+<td></td>
+</tr>
+<tr>
+<td>(D) no label smoothing</td>
+<td>4.67</td>
+<td>25.3</td>
+<td></td>
+</tr>
+<tr>
+<td>(E) learned positional embeddings</td>
+<td>4.92</td>
+<td>25.7</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Big</strong> (<span class="math-inline">$d_{\text{model}}{=}1024$</span>, <span class="math-inline">$d_{ff}{=}4096$</span>, <span class="math-inline">$h{=}16$</span>, dropout 0.3, 300K steps)</td>
+<td>4.33</td>
+<td>26.4</td>
+<td>213M</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Selected rows of Table 3.</em></p>
+<p>What the authors conclude:</p>
+<ul>
+<li><strong>(A) Number of heads.</strong> With compute held constant, a single head is <strong>0.9 BLEU worse</strong> than the best setting, and quality also drops with too many heads.</li>
+<li><strong>(B) Key size.</strong> Shrinking <span class="math-inline">$d_k$</span> hurts, suggesting that "determining compatibility is not easy" and that a more sophisticated compatibility function than the dot product might help.</li>
+<li><strong>(C) Size.</strong> Bigger models are better.</li>
+<li><strong>(D) Regularisation.</strong> Dropout is very helpful against overfitting. Label smoothing raises perplexity but improves BLEU: without it, perplexity improves to 4.67 while BLEU drops to 25.3.</li>
+<li><strong>(E) Positions.</strong> Learned positional embeddings give nearly identical results to sinusoids.</li>
+</ul>
+<h3 id="63-beyond-translation-english-constituency-parsing-63">6.3 Beyond translation: English constituency parsing (§6.3)</h3>
+<p>To test whether the Transformer generalises, the authors tried <strong>constituency parsing</strong>: turning a sentence into a tree of nested phrases, written out as a bracketed sequence such as <code>(S (NP The cat) (VP sat))</code>. This task is hard for sequence models because the output is strongly constrained by structure and much longer than the input. RNN sequence-to-sequence models had not reached the state of the art when training data was small.</p>
+<p>Setup:</p>
+<ul>
+<li>A <strong>4-layer</strong> Transformer with <span class="math-inline">$d_{\text{model}} = 1024$</span>.</li>
+<li><strong>WSJ only:</strong> trained on the Wall Street Journal portion of the Penn Treebank, about <strong>40,000</strong> training sentences, with a 16K-token vocabulary.</li>
+<li><strong>Semi-supervised:</strong> also trained on larger high-confidence and BerkeleyParser corpora, about <strong>17 million</strong> sentences, with a 32K-token vocabulary.</li>
+<li>Only dropout, learning rates and beam size were tuned, on the development set (Section 22). Everything else was unchanged from the English-German base model.</li>
+<li>Decoding used a maximum output length of input length + 300, beam size 21 and <span class="math-inline">$\alpha = 0.3$</span>.</li>
+</ul>
+<p>Results on WSJ Section 23, as F1 scores (higher is better):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Training data</th>
+<th>Transformer F1</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WSJ only (40K sentences)</td>
+<td><strong>91.3</strong></td>
+<td>Beats the BerkeleyParser (90.4), which RNN seq2seq models had failed to do on this little data</td>
+</tr>
+<tr>
+<td>Semi-supervised</td>
+<td><strong>92.7</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>The Transformer did better than all previously reported models except the Recurrent Neural Network Grammar, despite having almost no task-specific tuning.</p>
+<hr />
+<h2 id="7-peeking-inside-attention-visualisations-appendix"><a class="anchor" href="#7-peeking-inside-attention-visualisations-appendix" aria-label="Link to this section">#</a>7. Peeking inside: attention visualisations (appendix)</h2>
+<p>The appendix shows attention weights from encoder self-attention in layer 5 of 6 for a sentence about American governments passing laws "making the registration or voting process more difficult":</p>
+<ul>
+<li><strong>Long-distance dependencies (Figure 3).</strong> Many heads attending from "making" focus on the distant word "difficult", completing the phrase "making … more difficult".</li>
+<li><strong>Anaphora resolution (Figure 4).</strong> Two heads appear to work out what the pronoun "its" refers to, with very sharp attention from "its".</li>
+<li><strong>Sentence structure (Figure 5).</strong> Different heads clearly learn different, structure-related behaviours.</li>
+</ul>
+<p>These plots are illustrations, not proof of what the model computes, but they made attention a popular tool for interpretation.</p>
+<h2 id="8-the-authors-conclusion-7"><a class="anchor" href="#8-the-authors-conclusion-7" aria-label="Link to this section">#</a>8. The authors' conclusion (§7)</h2>
+<p>The authors summarise the Transformer as "the first sequence transduction model based entirely on attention, replacing the recurrent layers most commonly used in encoder-decoder architectures with multi-headed self-attention". For translation, it "can be trained significantly faster than architectures based on recurrent or convolutional layers."</p>
+<p>Their stated future work:</p>
+<ul>
+<li>apply attention-based models to other tasks, including input and output modalities other than text;</li>
+<li>investigate <strong>local, restricted attention</strong> to handle large inputs and outputs such as <strong>images, audio and video</strong>;</li>
+<li>make generation <strong>less sequential</strong>.</li>
+</ul>
+<p>The code was released in Google's <strong>tensor2tensor</strong> library. The paper's contribution footnote credits:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Author</th>
+<th>Contribution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jakob Uszkoreit</td>
+<td>Proposed replacing RNNs with self-attention</td>
+</tr>
+<tr>
+<td>Ashish Vaswani and Illia Polosukhin</td>
+<td>Designed and implemented the first Transformer models</td>
+</tr>
+<tr>
+<td>Noam Shazeer</td>
+<td>Proposed scaled dot-product attention, multi-head attention and the parameter-free position representation</td>
+</tr>
+<tr>
+<td>Niki Parmar</td>
+<td>Designed, implemented, tuned and evaluated countless model variants</td>
+</tr>
+<tr>
+<td>Llion Jones</td>
+<td>Worked on model variants, the initial codebase, efficient inference and visualisations</td>
+</tr>
+<tr>
+<td>Łukasz Kaiser and Aidan Gomez</td>
+<td>Designed and implemented tensor2tensor</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="9-reading-it-today"><a class="anchor" href="#9-reading-it-today" aria-label="Link to this section">#</a>9. Reading it today</h2>
+<p><em>This section is context from after 2017, not from the paper.</em></p>
+<ul>
+<li><strong>The future work happened, and then some.</strong> Within a year and a half, BERT (encoder only) and GPT (decoder only) showed the architecture could be pre-trained on huge amounts of text. The Vision Transformer (2020) applied it to images, and similar models now handle audio, video, code and proteins. Almost every large language model is a decoder-only Transformer.</li>
+<li><strong>Some details changed.</strong> Most modern models normalise <em>before</em> each sub-layer ("pre-LN"), which trains more stably in deep stacks. Sinusoidal positions were largely replaced by learned or rotary schemes, and ReLU often became GELU or gated variants.</li>
+<li><strong>The quadratic cost became the main bottleneck.</strong> The <span class="math-inline">$O(n^2)$</span> attention cost in Table 1 barely mattered for 50-token sentences. It became the central engineering problem once models read thousands or millions of tokens, which led to work on efficient attention (the paper's "restricted attention" idea), FlashAttention and KV caching.</li>
+<li><strong>The core is unchanged.</strong> Scaled dot-product attention, multiple heads, residual connections, normalisation and position-wise feed-forward layers are still the backbone.</li>
+</ul>
+<h2 id="10-glossary"><a class="anchor" href="#10-glossary" aria-label="Link to this section">#</a>10. Glossary</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Auto-regressive</td>
+<td>Generating one token at a time, each conditioned on the previous ones.</td>
+</tr>
+<tr>
+<td>Self-attention</td>
+<td>Attention where queries, keys and values all come from the same sequence.</td>
+</tr>
+<tr>
+<td>Query, key, value</td>
+<td>What a position is looking for, what it offers to be matched on, and what it contributes if matched.</td>
+</tr>
+<tr>
+<td>Head</td>
+<td>One of several parallel attention operations with their own projections.</td>
+</tr>
+<tr>
+<td>Masking</td>
+<td>Blocking attention to certain positions (here, future tokens) by setting their scores to <span class="math-inline">$-\infty$</span>.</td>
+</tr>
+<tr>
+<td>Residual connection</td>
+<td>Adding a layer's input to its output, so the layer learns a change.</td>
+</tr>
+<tr>
+<td>Layer normalisation</td>
+<td>Rescaling each vector to a standard range for stable training.</td>
+</tr>
+<tr>
+<td>Positional encoding</td>
+<td>A vector added to embeddings so the model knows token order.</td>
+</tr>
+<tr>
+<td>BPE / word-piece</td>
+<td>Ways of splitting text into subword units.</td>
+</tr>
+<tr>
+<td>BLEU</td>
+<td>An automatic translation score based on overlapping word sequences with reference translations.</td>
+</tr>
+<tr>
+<td>Perplexity</td>
+<td>How surprised a model is by the correct text; lower is better.</td>
+</tr>
+<tr>
+<td>Beam search</td>
+<td>Decoding that keeps the top-<span class="math-inline">$k$</span> partial outputs at each step.</td>
+</tr>
+<tr>
+<td>Label smoothing</td>
+<td>Training toward slightly-less-than-certain targets, which improves generalisation.</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>The harmonic mean of precision and recall, used for parsing accuracy.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="11-cheat-sheet-the-numbers-to-remember"><a class="anchor" href="#11-cheat-sheet-the-numbers-to-remember" aria-label="Link to this section">#</a>11. Cheat sheet: the numbers to remember</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Base</th>
+<th>Big</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Layers (<span class="math-inline">$N$</span>)</td>
+<td>6 encoder + 6 decoder</td>
+<td>6 + 6</td>
+</tr>
+<tr>
+<td><span class="math-inline">$d_{\text{model}}$</span></td>
+<td>512</td>
+<td>1024</td>
+</tr>
+<tr>
+<td><span class="math-inline">$d_{ff}$</span></td>
+<td>2048</td>
+<td>4096</td>
+</tr>
+<tr>
+<td>Heads (<span class="math-inline">$h$</span>)</td>
+<td>8</td>
+<td>16</td>
+</tr>
+<tr>
+<td><span class="math-inline">$d_k = d_v$</span></td>
+<td>64</td>
+<td>64</td>
+</tr>
+<tr>
+<td>Dropout</td>
+<td>0.1</td>
+<td>0.3 (0.1 for EN→FR)</td>
+</tr>
+<tr>
+<td>Parameters</td>
+<td>65M</td>
+<td>213M</td>
+</tr>
+<tr>
+<td>Training</td>
+<td>100K steps, ~12 h on 8 P100s</td>
+<td>300K steps, 3.5 days on 8 P100s</td>
+</tr>
+<tr>
+<td>EN→DE BLEU</td>
+<td>27.3</td>
+<td>28.4</td>
+</tr>
+<tr>
+<td>EN→FR BLEU</td>
+<td>38.1</td>
+<td>41.8</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Shared settings:</strong>
+- Adam (<span class="math-inline">$\beta_1 = 0.9$</span>, <span class="math-inline">$\beta_2 = 0.98$</span>, <span class="math-inline">$\epsilon = 10^{-9}$</span>) with 4,000 warm-up steps
+- Label smoothing 0.1
+- Beam size 4, length penalty 0.6
+- Batches of about 25K source + 25K target tokens</p>
+<p><strong>The equation to remember:</strong> <span class="math-inline">$\mathrm{Attention}(Q,K,V) = \mathrm{softmax}(QK^\top/\sqrt{d_k})\,V$</span></p>
+<hr />
+<p><em>Numbers are taken from the paper's tables and text; section 9 is the only part that goes beyond the paper. Interactive figures use illustrative values.</em></p>
+          </article>
+        </div>
+        <section class="keep-reading">
+          <h2 class="kr-title">Keep <em>reading</em></h2>
+          <div class="rgrid">
+<article class="rcard reveal" data-type="side" data-search="brain-rewiring reads  45 non-technical topics for a curious mind on one page, from attention and habits to deep time, animal minds and stoicism, with rabbit holes, tiny actions and 21 live demos. side read psychology history science philosophy">
+  <div class="rcard-top"><span class="rcard-type t-side">Side read</span><span class="rcard-meta">Oct 12, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-brain-rewiring.vercel.app/" target="_blank" rel="noopener">Brain-Rewiring Reads</a></h3>
+  <p class="rcard-summary">45 non-technical topics for a curious mind on one page, from attention and habits to deep time, animal minds and Stoicism, with rabbit holes, tiny actions and 21 live demos.</p>
+  <ul class="tags"><li>Psychology</li><li>History</li><li>Science</li><li>Philosophy</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open it <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="guide" data-search="tokens per second  a hands-on llm inference guide for people who have never used a gpu: latency and memory math, gpu utilization, batching, kv caches, quantization, speculative decoding, multi-gpu serving, cost and troubleshooting. interactive guide llms inference gpus">
+  <div class="rcard-top"><span class="rcard-type t-guide">Interactive guide</span><span class="rcard-meta">Oct 1, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-llm-inference.vercel.app/" target="_blank" rel="noopener">Tokens per Second</a></h3>
+  <p class="rcard-summary">A hands-on LLM inference guide for people who have never used a GPU: latency and memory math, GPU utilization, batching, KV caches, quantization, speculative decoding, multi-GPU serving, cost and troubleshooting.</p>
+  <ul class="tags"><li>LLMs</li><li>Inference</li><li>GPUs</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open the guide <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="guide" data-search="because you watched  recommender systems from a to z: collaborative filtering, two-tower retrieval, deep ranking, bandits, generative recommenders with semantic ids, and case studies of netflix, youtube, spotify, linkedin and more. interactive guide recommender systems ranking generative ai">
+  <div class="rcard-top"><span class="rcard-type t-guide">Interactive guide</span><span class="rcard-meta">Oct 1, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-recommender-systems.vercel.app/" target="_blank" rel="noopener">Because You Watched</a></h3>
+  <p class="rcard-summary">Recommender systems from A to Z: collaborative filtering, two-tower retrieval, deep ranking, bandits, generative recommenders with semantic IDs, and case studies of Netflix, YouTube, Spotify, LinkedIn and more.</p>
+  <ul class="tags"><li>Recommender systems</li><li>Ranking</li><li>Generative AI</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open the guide <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p class="footer-sig">Aaryan <em>Shah</em></p>
+        <p class="mono muted">© <span id="year">2026</span> · <a href="../../../reading/">Reading list</a> · <a href="../../../reading/feed.xml">RSS</a></p>
+        <a class="to-top" href="#top" aria-label="Back to top"><svg aria-hidden="true"><use href="#i-arrow-up" /></svg></a>
+      </div>
+    </footer>
+
+    <script src="../../../assets/site/site.js" defer></script>
+    <script src="../../../assets/site/reading.js" defer></script>
+    <script src="../../../assets/site/vendor/katex/katex.min.js" defer></script>
+    <script src="../../../assets/site/vendor/katex/auto-render.min.js" defer></script>
+    <script src="../../../assets/site/paper-demos.js" defer></script>
+  </body>
+</html>
