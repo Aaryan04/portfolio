@@ -32,6 +32,7 @@ MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 # Home-page sections, then the Reading page (a separate page, so it sits last in the nav)
 NAV = [("about", "About Me"), ("education", "Education"), ("experience", "Experience"), ("projects", "Projects"),
        ("publications", "Publications"), ("contact", "Contact"), ("reading", "Reading")]
+PHOTOGRAPHY = "https://aaryanclicks.com/"  # external, opens in a new tab after the nav items
 
 esc = lambda s: html.escape(str(s), quote=True)
 
@@ -170,9 +171,12 @@ def chrome_top(rel, active="reading"):
     links = "\n".join(
         f'          <a href="{rel}reading/"{current if active == k else ""}>{v}</a>' if k == "reading"
         else f'          <a href="{rel}#{k}">{v}</a>' for k, v in NAV)
+    links += (f'\n          <a class="nav-ext" href="{PHOTOGRAPHY}" target="_blank" rel="noopener">'
+              'Photography <svg aria-hidden="true"><use href="#i-arrow-ur" /></svg></a>')
     mobile = "\n".join(
         f'        <a href="{rel}reading/"><span>{i:02d}</span>{v}</a>' if k == "reading" else f'        <a href="{rel}#{k}"><span>{i:02d}</span>{v}</a>'
         for i, (k, v) in enumerate(NAV, 1))
+    mobile += f'\n        <a href="{PHOTOGRAPHY}" target="_blank" rel="noopener"><span>{len(NAV) + 1:02d}</span>Photography ↗</a>'
     return f'''  <body class="reading-page">
     {sprite()}
 
