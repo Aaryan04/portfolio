@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GenRec: An LLM-Backed Recommendation Ranker at Netflix, explained · Aaryan Shah</title>
+    <meta name="description" content="Netflix replaces a ranker built on thousands of hand-engineered features with a post-trained in-house LLM that reads watch histories written as text and scores the whole catalog in a single forward pass. Every section, number and figure, with live demos of verbalization, the catalog-aware scoring head, serving cost and the results." />
+    <meta name="author" content="Aaryan Shah" />
+    <meta name="theme-color" content="#F5F0E8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E0C0A" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://aaryan04.github.io/portfolio/reading/papers/genrec-netflix-llm-ranker/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="GenRec: An LLM-Backed Recommendation Ranker at Netflix, explained · Aaryan Shah" />
+    <meta property="og:description" content="Netflix replaces a ranker built on thousands of hand-engineered features with a post-trained in-house LLM that reads watch histories written as text and scores the whole catalog in a single forward pass. Every section, number and figure, with live demos of verbalization, the catalog-aware scoring head, serving cost and the results." />
+    <meta property="og:url" content="https://aaryan04.github.io/portfolio/reading/papers/genrec-netflix-llm-ranker/" />
+    <meta property="og:image" content="https://aaryan04.github.io/portfolio/assets/site/img/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="alternate" type="application/rss+xml" title="Aaryan Shah, reading list" href="../../../reading/feed.xml" />
+    <link rel="icon" href="../../../assets/site/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="../../../assets/site/fonts/fraunces-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../../../assets/site/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="../../../assets/site/site.css" />
+    <link rel="stylesheet" href="../../../assets/site/reading.css" />
+    <link rel="stylesheet" href="../../../assets/site/vendor/katex/katex.min.css" />
+    <script>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add("js");
+        try {
+          var t = localStorage.getItem("theme");
+          if (t === "light" || t === "dark") d.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="reading-page">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="i-linkedin" viewBox="0 0 128 128"><path fill="currentColor" d="M116 3H12a8.91 8.91 0 00-9 8.8v104.42a8.91 8.91 0 009 8.78h104a8.93 8.93 0 009-8.81V11.77A8.93 8.93 0 00116 3zM39.17 107H21.06V48.73h18.11zm-9-66.21a10.5 10.5 0 1110.49-10.5 10.5 10.5 0 01-10.54 10.48zM107 107H88.89V78.65c0-6.75-.12-15.44-9.41-15.44s-10.87 7.36-10.87 15V107H50.53V48.73h17.36v8h.24c2.42-4.58 8.32-9.41 17.13-9.41C103.6 47.28 107 59.35 107 75z"/></symbol>
+      <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+        <symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></g></symbol>
+        <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></g></symbol>
+        <symbol id="i-arrow-ur" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></g></symbol>
+        <symbol id="i-arrow-r" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></g></symbol>
+        <symbol id="i-arrow-up" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></g></symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></g></symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></g></symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></g></symbol>
+        <symbol id="i-send" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></g></symbol>
+        <symbol id="i-database" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></g></symbol>
+        <symbol id="i-brain" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></g></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></g></symbol>
+        <symbol id="i-cloud" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></g></symbol>
+        <symbol id="i-camera" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.5"/></g></symbol>
+        <symbol id="i-paper" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></g></symbol>
+    </svg>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="progress" aria-hidden="true"><span></span></div>
+
+    <header class="nav" id="nav">
+      <div class="nav-inner">
+        <a class="brand" href="../../../" aria-label="Aaryan Shah, home">
+          <span class="brand-mark">AS</span>
+          <span class="brand-name">Aaryan Shah</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="../../../#about">About Me</a>
+          <a href="../../../#education">Education</a>
+          <a href="../../../#experience">Experience</a>
+          <a href="../../../#projects">Projects</a>
+          <a href="../../../#publications">Publications</a>
+          <a href="../../../#contact">Contact</a>
+          <a href="../../../reading/" class="is-active" aria-current="page">Reading</a>
+          <a class="nav-ext" href="https://aaryanclicks.com/" target="_blank" rel="noopener">Photography <svg aria-hidden="true"><use href="#i-arrow-ur" /></svg></a>
+        </nav>
+        <div class="nav-actions">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode">
+            <svg class="i-sun" aria-hidden="true"><use href="#i-sun" /></svg>
+            <svg class="i-moon" aria-hidden="true"><use href="#i-moon" /></svg>
+          </button>
+          <a class="btn btn-sm btn-outline nav-resume" target="_blank" rel="noopener" href="https://drive.google.com/file/d/1o-hSDuU1eyi58XIbdlitKkuIcR2H6NIx/view?usp=sharing">
+            Résumé <svg aria-hidden="true"><use href="#i-arrow-ur" /></svg>
+          </a>
+          <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+            <span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <nav aria-label="Mobile">
+        <a href="../../../#about"><span>01</span>About Me</a>
+        <a href="../../../#education"><span>02</span>Education</a>
+        <a href="../../../#experience"><span>03</span>Experience</a>
+        <a href="../../../#projects"><span>04</span>Projects</a>
+        <a href="../../../#publications"><span>05</span>Publications</a>
+        <a href="../../../#contact"><span>06</span>Contact</a>
+        <a href="../../../reading/"><span>07</span>Reading</a>
+        <a href="https://aaryanclicks.com/" target="_blank" rel="noopener"><span>08</span>Photography ↗</a>
+      </nav>
+      <a class="btn btn-solid" target="_blank" rel="noopener" href="https://drive.google.com/file/d/1o-hSDuU1eyi58XIbdlitKkuIcR2H6NIx/view?usp=sharing">Résumé <svg aria-hidden="true"><use href="#i-arrow-ur" /></svg></a>
+    </div>
+
+    <main id="main" class="article-main">
+      <div class="container">
+        <a class="crumb" href="../../../reading/"><svg aria-hidden="true"><use href="#i-arrow-r" /></svg> Reading list</a>
+        <header class="article-head" id="top">
+          <p class="article-kicker"><span class="rcard-type t-paper">Paper explainer</span><span class="mono muted">29 min read · Oct 20, 2026</span></p>
+          <h1 class="article-title">GenRec: An LLM-Backed Recommendation Ranker at Netflix</h1>
+          <p class="article-sub">How Netflix turned a language model into its recommendation ranker, explained for a first-time reader</p>
+          <dl class="article-facts"><div><dt>Authors</dt><dd>Ying Li, Shradha Sehgal, Arjun Rao, Rein Houthooft, Yunan Hu, Yaochen Zhu, Sourabh Medapati, Yun Li, Linas Baltrunas, Grace Huang, Ashish Rastogi, Kamelia Aryafar</dd></div><div><dt>Affiliation</dt><dd>Netflix, Los Gatos. Shradha Sehgal and Rein Houthooft did the work while at Netflix (Houthooft is now at Amazon).</dd></div><div><dt>Published</dt><dd>arXiv preprint (cs.IR), August 2026</dd></div><div><dt>You need</dt><dd>A rough idea of what a neural network and a language model are. Recommender-system and LLM-serving ideas are explained as we go.</dd></div></dl>
+          <div class="pub-links"><a class="chip-link" href="https://arxiv.org/abs/2608.10257" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-paper" /></svg>arXiv:2608.10257</a><a class="chip-link" href="../../../reading/"><svg aria-hidden="true"><use href="#i-arrow-r" /></svg>All readings</a></div>
+        </header>
+        <div class="article-grid">
+          <aside class="toc" aria-label="On this page">
+            <details class="toc-box" open><summary>On this page</summary><ol><li><a href="#tldr">TL;DR</a></li><li><a href="#how-this-article-is-organized">How this article is organized</a></li><li><a href="#1-background-a-first-time-reader-needs">1. Background a first-time reader needs</a></li><li><a href="#2-the-problem-and-what-came-before-12">2. The problem and what came before (§1–2)</a></li><li><a href="#3-the-problem-setting-3">3. The problem setting (§3)</a></li><li><a href="#4-the-method-4">4. The method (§4)</a></li><li><a href="#5-results-5">5. Results (§5)</a></li><li><a href="#6-the-authors-discussion-llm-native-recommendation-6">6. The authors&#x27; discussion: &quot;LLM-native&quot; recommendation (§6)</a></li><li><a href="#7-the-authors-conclusion-and-future-work-7">7. The authors&#x27; conclusion and future work (§7)</a></li><li><a href="#reading-notes-what-the-paper-leaves-out">Reading notes: what the paper leaves out</a></li><li><a href="#glossary">Glossary</a></li><li><a href="#cheat-sheet">Cheat sheet</a></li></ol></details>
+          </aside>
+          <article class="prose">
+<h2 id="tldr"><a class="anchor" href="#tldr" aria-label="Link to this section">#</a>TL;DR</h2>
+<ul>
+<li>Netflix's production <strong>ranker</strong> is built on thousands of hand-engineered features and custom architectures, which makes every new content type or surface slow to support.</li>
+<li><strong>GenRec</strong> replaces it with a <strong>language model</strong>. Member history, item details and context are written as <strong>text</strong> for an LLM to read, a shift the authors call "from feature engineering to context engineering".</li>
+<li>Training has <strong>two phases</strong>. Phase 1 adapts an open-source LLM to Netflix data, producing an in-house foundation model. Phase 2, this paper's subject, post-trains it for ranking with a ranking loss, a language-modeling loss and <strong>reward weights</strong> favoring engagement linked to long-term satisfaction.</li>
+<li>A <strong>catalog-aware scoring head</strong> gives a score to every title in the catalog in <strong>one forward pass</strong>. It cannot suggest titles Netflix doesn't have and needs no token-by-token generation (<strong>prefill-only</strong> serving on vLLM).</li>
+<li>With about <strong>40× fewer Phase-2 training examples</strong> and far fewer input signals than the production ranker, GenRec scored <strong>+1.6% relative MRR</strong> offline. In a 4-week A/B test on about 10% of Netflix traffic, it also produced statistically significant gains on a short-term engagement metric (<strong>+0.115%</strong>) and on the long-term core metric (<strong>+0.006%</strong>).</li>
+<li>Careful context engineering cut prompts from about <strong>5,000 to 1,700 tokens</strong> with negligible quality loss, which cut serving cost to about a third. Quality improved steadily with more data and bigger models (about 1B to 10B parameters).</li>
+</ul>
+<h2 id="how-this-article-is-organized"><a class="anchor" href="#how-this-article-is-organized" aria-label="Link to this section">#</a>How this article is organized</h2>
+<p>It follows the paper's order (§1–7) after a short background section, and ends with reading notes, a glossary and a cheat sheet. Section numbers in brackets, like (§4.3), point to the paper. I use version 2 of the arXiv paper (21 August 2026).</p>
+<hr />
+<h2 id="1-background-a-first-time-reader-needs"><a class="anchor" href="#1-background-a-first-time-reader-needs" aria-label="Link to this section">#</a>1. Background a first-time reader needs</h2>
+<h3 id="how-a-recommender-produces-a-row-of-titles">How a recommender produces a row of titles</h3>
+<p>A large recommender rarely scores every item with its most expensive model. It works like a hiring funnel:</p>
+<ol>
+<li><strong>Candidate retrieval</strong> quickly narrows thousands or millions of items to a few hundred plausible ones with cheap methods such as nearest-neighbor search.</li>
+<li><strong>Ranking</strong> orders those candidates carefully with a heavier model. What appears first is mostly what gets watched.</li>
+<li><strong>Re-ranking and business rules</strong> adjust the final list, for example to mix movies with series and games, or to avoid showing five near-identical titles.</li>
+</ol>
+<p>GenRec is a <strong>ranker</strong>. The paper frames it as <strong>full-catalog ranking</strong>: produce an ordering of every item, or of a supplied candidate set (§3). For a full A-to-Z tour of these stages, see the interactive guide <a href="https://a2z-recommender-systems.vercel.app/">Because You Watched</a>.</p>
+<h3 id="what-the-traditional-ranker-looks-like">What the "traditional" ranker looks like</h3>
+<p>The production model GenRec competes with is <strong>discriminative</strong>. It takes a fixed set of input numbers and predicts a score, such as the probability that this member plays this title. Its inputs are <strong>hand-crafted features</strong>: values an engineer designed and computed, such as "share of this member's viewing that is documentaries over the last 28 days" or "how fast this title's popularity is rising".</p>
+<p>Such systems also rely on <strong>feature interactions</strong>, or crosses: combinations of features, like "member likes thrillers <em>and</em> title is a new thriller", whose meaning depends on both parts. Industry rankers use specialized networks to model these (Wide &amp; Deep, DLRM), transformers over viewing sequences, and multi-task networks that predict several outcomes at once (§1).</p>
+<p>The paper's complaint is about <em>velocity</em>: onboarding a new content type (games, live events, podcasts) or a new surface "often requires substantial work in feature engineering, model architecture design, infrastructure changes, and experimentation" (§1).</p>
+<h3 id="just-enough-about-llms">Just enough about LLMs</h3>
+<ul>
+<li>A <strong>token</strong> is a chunk of text, roughly ¾ of an English word on average. An LLM reads and writes tokens.</li>
+<li>A <strong>decoder-only transformer</strong> is the architecture behind GPT-style models. It reads a sequence of tokens and, at every position, produces a <strong>hidden state</strong>: a vector of <span class="math-inline">$d$</span> numbers summarizing everything up to that point. (The <a href="../attention-is-all-you-need/">Attention explainer</a> covers transformers from scratch.)</li>
+<li><strong>Pre-training</strong> teaches a model to predict the next token on huge amounts of text. <strong>Post-training</strong>, or fine-tuning, then adapts it to a specific job with targeted data and objectives.</li>
+<li>Running an LLM has two phases. <strong>Prefill</strong> processes the whole input prompt in one parallel pass. <strong>Decode</strong> then generates output one token at a time, and each new token needs another pass through the model. Prefill is efficient on GPUs; decode is sequential and slow per token. Both, and the <strong>KV cache</strong> that speeds decoding, are covered in depth in <a href="https://a2z-llm-inference.vercel.app/">Tokens per Second</a>.</li>
+<li><strong>vLLM</strong> is a popular open-source LLM serving engine. Netflix serves its LLMs with an in-house stack built on it (§4.7).</li>
+</ul>
+<blockquote>
+<p><strong>Analogy.</strong> A traditional ranker is like a doctor who only sees a lab report: a long table of pre-computed numbers. GenRec is like a doctor who reads the patient's own story, written in plain words, and has also read a lot of medicine beforehand. The story can carry details nobody thought to put in the lab report.</p>
+</blockquote>
+<hr />
+<h2 id="2-the-problem-and-what-came-before-12"><a class="anchor" href="#2-the-problem-and-what-came-before-12" aria-label="Link to this section">#</a>2. The problem and what came before (§1–2)</h2>
+<h3 id="why-not-just-ask-an-off-the-shelf-llm">Why not just ask an off-the-shelf LLM?</h3>
+<p>LLMs know a lot about movies and can follow instructions, so "here is what I watched, what next?" seems natural. The paper lists four reasons this fails in production (§1). Out-of-the-box LLMs:</p>
+<ul>
+<li><strong>over-recommend globally popular content</strong>, because popular titles dominate the text they were trained on;</li>
+<li><strong>hallucinate out-of-catalog titles</strong>, suggesting films Netflix doesn't carry or that don't exist;</li>
+<li><strong>ignore nuanced business constraints</strong>, such as content mixing rules;</li>
+<li>offer <strong>limited personalization</strong>.</li>
+</ul>
+<p>GenRec addresses these one by one:</p>
+<ul>
+<li>post-training on Netflix behavior counters the popularity bias;</li>
+<li>the output is restricted to catalog items;</li>
+<li>business goals are built in through reward weights;</li>
+<li>user histories are verbalized in detail.</li>
+</ul>
+<h3 id="related-work-two-lines-of-generative-recommendation-2">Related work: two lines of generative recommendation (§2)</h3>
+<p><strong>Generative recommendation with special tokens (§2.1).</strong> Sequential recommenders such as <strong>SASRec</strong> (2018) and <strong>BERT4Rec</strong> (2019) treat a member's history as a sequence of item IDs and predict the next item, just as a language model predicts the next word. Industrial systems scaled this up with transformer decoders whose vocabularies include <strong>special tokens</strong> for item IDs, metadata, locale, time, device and surface. Examples are Meta's HSTU ("Actions Speak Louder than Words"), Pinterest's PinRec and Netflix's own foundation model for recommendation.</p>
+<p>A complementary idea is <strong>semantic IDs</strong>. <strong>TIGER</strong> (2023) gives each item a short code of a few tokens, learned by an <strong>RQ-VAE</strong>. That is a network that compresses an item's content embedding into a sequence of discrete codes, coarse first and then finer, a bit like "genre → sub-genre → specific title". Similar items share code prefixes, and a model can generate an item one code at a time even with billions of items. Google used semantic IDs for ranking, and Kuaishou's <strong>OneRec</strong> unifies retrieval and ranking with them.</p>
+<p>These systems work well, but they are trained from scratch on IDs. They "are typically limited in their ability to leverage broad world knowledge, to steer recommendations through flexible prompts, or to inherit the richer capabilities of modern pretrained language models" (§2.1).</p>
+<p><strong>LLM-based recommendation (§2.2).</strong> This line starts from a <em>pretrained LLM</em> instead:</p>
+<ul>
+<li><strong>Academic systems</strong> cast recommendation as text-to-text generation: P5, TALLRec, LlamaRec.</li>
+<li><strong>Google's PLUM</strong> adapts a pretrained LLM at YouTube scale with semantic-ID tokens, continued pre-training and fine-tuning.</li>
+<li><strong>Spotify's GLIDE</strong> treats podcast discovery as instruction following over a semantic-ID catalog.</li>
+<li><strong>Kuaishou's OneRec-Think</strong> adds a Qwen3 backbone and reasoning steps.</li>
+</ul>
+<p>The paper's critique is about serving. Most of these systems generate items <strong>autoregressively with beam search</strong>. <strong>Beam search</strong> keeps the <span class="math-inline">$B$</span> most promising partial outputs at each step instead of just the single best one. Emitting items token by token with several beams "introduces latency overhead that can be prohibitive at scale, especially for large candidate sets." GenRec instead adds a <strong>catalog-aware ranking head</strong>, so a whole candidate set is ranked in one forward pass (§2.2).</p>
+<hr />
+<h2 id="3-the-problem-setting-3"><a class="anchor" href="#3-the-problem-setting-3" aria-label="Link to this section">#</a>3. The problem setting (§3)</h2>
+<p>The notation is short:</p>
+<ul>
+<li><span class="math-inline">$U$</span> is the set of users, <span class="math-inline">$C$</span> is the catalog (movies, shows, games, live events, podcasts), and <span class="math-inline">$X$</span> is the space of contexts (device, surface, locale, time of day).</li>
+<li>A single <strong>request</strong> is a user <span class="math-inline">$u$</span>, a context <span class="math-inline">$\tau$</span> and a time <span class="math-inline">$t$</span>. <span class="math-inline">$H$</span> is the user's interaction history before <span class="math-inline">$t$</span>.</li>
+<li>Each item <span class="math-inline">$i \in C$</span> has <strong>metadata</strong> <span class="math-inline">$M_i$</span>: title name, genre, synopsis, release date and so on.</li>
+</ul>
+<p>A recommender maps a request <span class="math-inline">$(u, \tau, t, H)$</span> to a <strong>ranking</strong> <span class="math-inline">$\pi$</span> of the catalog. <span class="math-inline">$\pi(i)$</span> is the position given to item <span class="math-inline">$i$</span>, and position 1 is the top.</p>
+<div class="math-display">$$\pi : C \to \{1, \dots, |C|\}$$</div>
+<p>The goal is a ranking that maximizes <strong>expected long-term member utility</strong>, "a proxy for member satisfaction and retention — rather than short-term engagement alone" (§3). That phrase matters later. It is why the training loss is weighted by rewards instead of simply copying what people clicked.</p>
+<p>The ranked list is meant to be reusable: it can order items on different surfaces, or feed downstream systems as a personalized signal (§3).</p>
+<hr />
+<h2 id="4-the-method-4"><a class="anchor" href="#4-the-method-4" aria-label="Link to this section">#</a>4. The method (§4)</h2>
+<h3 id="41-two-training-phases-41">4.1 Two training phases (§4.1)</h3>
+<p>GenRec is built in two phases (Figure 2 of the paper).</p>
+<ul>
+<li><strong>Phase 1:</strong> start from an open-source LLM and train it further on proprietary Netflix data. The result is a <strong>Netflix foundation LLM</strong> that understands the catalog and member behavior and keeps general skills such as content understanding and instruction following.</li>
+<li><strong>Phase 2:</strong> <strong>post-train</strong> that foundation model on ranking-specific data, labels and reward signals. The result is GenRec.</li>
+</ul>
+<p>The two phases have different priorities (§4.1):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Phase 1: foundation LLM</th>
+<th>Phase 2: GenRec post-training</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capability focus</td>
+<td>Broad: world knowledge, personalization, content understanding, language</td>
+<td>Narrow: ranking quality and steering recommendations</td>
+</tr>
+<tr>
+<td>Update cadence</td>
+<td>Infrequent; long-term user and content understanding</td>
+<td>Frequent; tracks new launches, shifting popularity, members' latest interests</td>
+</tr>
+<tr>
+<td>Cost sensitivity</td>
+<td>Build the most capable model; less constrained by serving cost</td>
+<td>Must be cheap enough to serve large-scale traffic</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>Analogy.</strong> Phase 1 is medical school, slow and broad, done once in a while. Phase 2 is the residency for one specialty, repeated often so the doctor keeps up with this month's patients.</p>
+</blockquote>
+<p>This split explains why the paper cares so much about Phase-2 <strong>data efficiency</strong>. Phase 2 is re-run often, so every saving there is paid back every refresh (§1, §5.1).</p>
+<h3 id="42-post-training-data-histories-as-conversations-42">4.2 Post-training data: histories as conversations (§4.2)</h3>
+<p>Netflix members generate "hundreds of billions" of interaction events across movies, shows, games and live events: plays, thumbs, list additions and more, on many surfaces (§4.2).</p>
+<p>To train an LLM on this, each member's history is rewritten as a single-turn or multi-turn <strong>conversation</strong> between a user and a recommender. A <strong>user message</strong> combines context, history and a task. The <strong>assistant message</strong> is what the member actually did next. Each conversation contains:</p>
+<ul>
+<li><strong>Context:</strong> surface, time, device, locale.</li>
+<li><strong>User profile and history:</strong> country, tenure, plan, past interactions.</li>
+<li><strong>Item-level detail:</strong> item IDs, metadata (title, release time, synopsis), popularity trends.</li>
+<li><strong>Task:</strong> for example, "predict the next items this user will play or thumb up".</li>
+<li><strong>Assistant message:</strong> the member's real implicit or explicit feedback, such as a play, play duration, abandonment or thumb. This is the <strong>ground truth</strong> for training.</li>
+</ul>
+<p>An illustrative turn might look like this (my example, not the paper's format):</p>
+<pre><code class="language-text">USER: Context: Friday 9 PM, TV, US. Member since 2019.
+History: Dark S1 (finished, thumbs up); Mindhunter S1E1–E4; Glass Onion (movie, full).
+Task: rank the titles this member will play next.
+ASSISTANT: Played &quot;3 Body Problem&quot; S1E1 for 58 minutes.
+</code></pre>
+<p>This one format can express very different logs, and it feeds both training objectives described below.</p>
+<h3 id="43-verbalization-and-context-engineering-43">4.3 Verbalization and context engineering (§4.3)</h3>
+<p><strong>Verbalization</strong> means writing the raw signals as natural language or lightly structured text, instead of turning them into features or dense embeddings. The LLM is then left to discover patterns itself: how items relate, how timing matters, how interests drift (§4.3).</p>
+<p>The catch is the <strong>token budget</strong>. A long-time member's history, with rich metadata on every event, can easily exceed what fits in the prompt. Long prompts also "dilute attention" and make training and serving more expensive. So verbalization needs <strong>context engineering</strong>, a term the paper borrows from an Anthropic engineering post on building agents. It means deciding what goes into the limited context window and how. GenRec's rules (§4.3):</p>
+<ul>
+<li><strong>Retain in full:</strong> high-signal engagements, such as long plays and thumbs-up, get richer metadata.</li>
+<li><strong>Omit entirely:</strong> recent low-signal events, such as very short plays and noisy views or clicks, cost tokens and add little.</li>
+<li><strong>Summarize or compress:</strong> repetitive behavior like a binge is compressed instead of listing every episode.</li>
+<li><strong>Elaborate selectively:</strong> important items, such as new releases and <strong>cold-start</strong> items (titles with little interaction history), get extra metadata. The pretrained model and the logs know little about them.</li>
+</ul>
+<p>Within the budget, short- and medium-term history is kept in finer detail. Older history is dropped or condensed into a short <strong>interest summary</strong>. The goal is "a compact set of highly informative tokens".</p>
+<figure class="paper-demo" data-demo="verbalizer"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>Context engineering on an illustrative watch history. Toggle each rule and watch the prompt and its rough token count change. The events and format are made up; the rules are the paper's (§4.3, §5.4).</figcaption></figure>
+<h3 id="44-training-objectives-44">4.4 Training objectives (§4.4)</h3>
+<p>Phase 2 combines two main objectives.</p>
+<p><strong>1. The recommendation ranking objective.</strong> The model learns to give higher scores to items linked to <em>high-value</em> engagement. Positive labels are "high-quality engaged events (e.g., high-duration plays, strong explicit feedback)". The thresholds and "denoising logic" differ by content type: a 3-minute play means something different for a game than for a film. The loss is <strong>cross-entropy over the catalog</strong> (or the candidate set).</p>
+<p>Cross-entropy works like this. The model turns its item scores <span class="math-inline">$s_i$</span> into probabilities with a <strong>softmax</strong>:</p>
+<div class="math-display">$$p(i \mid x) = \frac{e^{s_i}}{\sum_{j \in C} e^{s_j}}$$</div>
+<p>and the loss for one example whose real positive item is <span class="math-inline">$i^+$</span> is</p>
+<div class="math-display">$$\mathcal{L}_{\text{ranking}} = -\log p(i^+ \mid x)$$</div>
+<p>In plain words, the loss is small when the model gives the item the member actually engaged with a large share of the probability, and large when it didn't.</p>
+<p><strong>Worked example.</strong> Take a catalog of four titles with scores <span class="math-inline">$s = (2.0,\ 1.0,\ 0.5,\ -1.0)$</span>.</p>
+<ul>
+<li>Exponentiating gives <span class="math-inline">$(7.39,\ 2.72,\ 1.65,\ 0.37)$</span>, which sums to <span class="math-inline">$12.12$</span>, so the probabilities are <span class="math-inline">$(0.61,\ 0.22,\ 0.14,\ 0.03)$</span>.</li>
+<li>If the member actually played title 2, the loss is <span class="math-inline">$-\ln 0.22 \approx 1.50$</span>.</li>
+<li>If they played title 1, it is only <span class="math-inline">$-\ln 0.61 \approx 0.49$</span>.</li>
+</ul>
+<p>Training nudges scores so that real choices rise to the top.</p>
+<p><strong>2. The language modeling objective.</strong> The model is also trained to predict tokens in the verbalized inputs and outputs, such as predicted titles and other text fields. That is the standard next-token loss, <span class="math-inline">$-\sum_t \log p(x_t \mid x_{&lt;t})$</span>. This keeps the backbone's language skills alive, which matters for two reasons: (i) reading rich natural-language histories and metadata, and (ii) <strong>steering</strong> recommendations with prompts.</p>
+<p>At <strong>inference</strong> time only the ranking output is used. The language objective "primarily serves to introduce complementary textual information to improve the ranking task", preserve prompt responsiveness, and leave the door open to generating text later, such as natural-language explanations (§4.4).</p>
+<p>The objectives are combined with weights that sum to one:</p>
+<div class="math-display">$$\mathcal{L} = \alpha\,\mathcal{L}_{\text{ranking}} + \beta\,\mathcal{L}_{\text{language}} + \gamma\,\mathcal{L}_{\text{misc}}, \quad \alpha + \beta + \gamma = 1,\ \ \alpha, \beta, \gamma \ge 0$$</div>
+<p><span class="math-inline">$\mathcal{L}_{\text{misc}}$</span> covers "other objectives where applicable", which the paper doesn't detail. The weights are tuned in offline experiments.</p>
+<h3 id="45-architecture-an-llm-with-a-catalog-aware-head-45">4.5 Architecture: an LLM with a catalog-aware head (§4.5)</h3>
+<p>The backbone is the foundation LLM itself: a decoder-only transformer trained with next-token-style objectives. On top sits a <strong>catalog-aware ranking head</strong>. Scoring happens in three stages:</p>
+<ol>
+<li><strong>Verbalization.</strong> A verbalizer <span class="math-inline">$V$</span> turns the history, the item metadata and the context into one text sequence:
+   <div class="math-display">$$x = V\big(H,\ \{M_i\}_{i \in C},\ \tau\big)$$</div></li>
+<li><strong>Pooled representation.</strong> The LLM reads <span class="math-inline">$x$</span>, and the hidden state at a chosen <strong>pooling position</strong> becomes a <span class="math-inline">$d$</span>-dimensional vector <span class="math-inline">$h$</span> summarizing "the user preference and context". A natural choice is the last token, but the paper doesn't say which position it uses.</li>
+<li><strong>Catalog-aware scoring.</strong> A scoring head <span class="math-inline">$\phi$</span> combines <span class="math-inline">$h$</span> with a learned <span class="math-inline">$d$</span>-dimensional <strong>item embedding</strong> <span class="math-inline">$e_i$</span> for every item <span class="math-inline">$i$</span> to produce a score. The paper doesn't spell out <span class="math-inline">$\phi$</span>. The simplest version, used in the demo below, is a dot product, <span class="math-inline">$s_i = h \cdot e_i$</span>.</li>
+</ol>
+<p>The LLM weights, the head <span class="math-inline">$\phi$</span> and all item embeddings <span class="math-inline">$\{e_i\}$</span> are trained together. A softmax over the catalog turns scores into probabilities, and sorting gives the ranking <span class="math-inline">$\pi$</span>.</p>
+<p>This design solves two problems at once:</p>
+<ul>
+<li><strong>No hallucinated titles.</strong> The model can only score items that have an embedding, and only catalog items do.</li>
+<li><strong>One pass for the whole catalog.</strong> Scoring every item is one matrix-vector product after a single forward pass, not a generation loop.</li>
+</ul>
+<p>When the catalog is too large to score every item, the paper notes that scoring can be combined with <strong>sampled softmax</strong>. The denominator is computed over the positive plus a random sample of negatives instead of every item, with a correction for the sampling.</p>
+<figure class="paper-demo" data-demo="catalog-head"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>The catalog-aware head on a toy two-dimensional catalog. Rotate the member vector h and sharpen it; every title is scored by a dot product with its embedding, and the softmax turns scores into a ranking. Pick which title the member really played to see the loss. Titles and positions are illustrative.</figcaption></figure>
+<figure class="paper-demo" data-demo="genrec-pipeline"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>The whole system, block by block. Click a block to see what it does and where it appears in the paper.</figcaption></figure>
+<h3 id="46-reward-signals-46">4.6 Reward signals (§4.6)</h3>
+<p>Copying past behavior is not the goal. GenRec must also:</p>
+<ol>
+<li><strong>respect business requirements</strong>, such as content mixing (balancing movies, shows, live events, games and podcasts);</li>
+<li><strong>maximize long-term member satisfaction</strong>, not just short-term engagement.</li>
+</ol>
+<p>Training on raw interactions alone drifts away from both. The model "might over-recommend binge-watching over discovery, favor videos over games, or select items that maximize immediate clicks at the expense of catalog exploration or long-term retention" (§4.6).</p>
+<p>So GenRec brings in rewards from <strong>separate reward models</strong>, taken from an existing Netflix framework (Tang et al., RecSys 2023). There are two families:</p>
+<ul>
+<li><strong>Long-term satisfaction proxies.</strong> True long-term outcomes, such as whether someone stays subscribed for months, are noisy and arrive late. Reward models learned from historical data estimate how strongly a short-term engagement predicts good long-term outcomes. Engagements that bring members back, widen what they explore, or lead to sustained viewing score higher.</li>
+<li><strong>Behavior rebalancing.</strong> These rewards rebalance across content types (movies, games, live, podcasts) and launch stages (pre-launch, newly launched, evergreen), for goals such as "exposure fairness across content types".</li>
+</ul>
+<p><strong>How the rewards enter training: a reward-weighted loss.</strong> Each training example gets a scalar weight <span class="math-inline">$w$</span> derived from the reward signals, and its ranking loss is multiplied by that weight. High-value engagements count more and low-value or undesirable ones count less. The paper describes this in words; in symbols (my notation) it is</p>
+<div class="math-display">$$\mathcal{L}_{\text{ranking}} = -\frac{1}{N} \sum_{n=1}^{N} w_n \log p\big(i^+_n \mid x_n\big)$$</div>
+<p>Continuing the worked example: a play the reward models rate highly (<span class="math-inline">$w = 1.5$</span>) contributes <span class="math-inline">$1.5 \times 1.50 = 2.25$</span> to the loss. A play they rate low (<span class="math-inline">$w = 0.5$</span>) contributes only <span class="math-inline">$0.75$</span>. The model therefore learns more from the first kind.</p>
+<p><strong>Why not full reinforcement learning?</strong> In <strong>reinforcement learning (RL)</strong> the model would generate recommendations, receive rewards, and update its policy to earn more reward. Preliminary RL experiments with <strong>GRPO</strong> (Group Relative Policy Optimization, the method popularized by DeepSeek's reasoning models) "showed additional gains over supervised finetuning". However, the training overhead was too high for now. The reward-weighted loss was chosen "due to its simplicity, stability, and cost considerations", and RL is left for future work (§4.6).</p>
+<h3 id="47-online-serving-and-cost-47">4.7 Online serving and cost (§4.7)</h3>
+<p>At Netflix's scale (hundreds of millions of members), serving cost is "a first-class constraint". The paper's rule of thumb: inference cost is <strong>roughly proportional to model size × context length</strong>. A useful way to see why: processing one token through a model with <span class="math-inline">$N$</span> parameters costs about <span class="math-inline">$2N$</span> floating-point operations, so a prompt of <span class="math-inline">$T$</span> tokens costs about <span class="math-inline">$2NT$</span>. For example, a 10B-parameter model reading 5,000 tokens needs roughly <span class="math-inline">$2 \times 10^{10} \times 5{,}000 = 10^{14}$</span> operations per request. That is an illustrative calculation; the paper doesn't give its model size or FLOP counts.</p>
+<p>So there are two levers:</p>
+<ol>
+<li><strong>Smaller and distilled models.</strong> <strong>Distillation</strong> trains a small "student" model to imitate a large "teacher". Smaller models trained on larger or more targeted data recover much of the larger models' quality at lower cost. The paper cites MobileLLM-R1, a family of sub-billion-parameter models.</li>
+<li><strong>Shorter contexts</strong> through the verbalization compaction of §4.3, measured in §5.4.</li>
+</ol>
+<p>The third lever is the <strong>inference mode</strong>. Generating a ranking token by token, or with beam search, over a large candidate set "would be prohibitively expensive". So although the backbone <em>can</em> generate text, GenRec is deployed <strong>prefill-only</strong>. It reads the context once and the head scores the full candidate set in that same forward pass. There is no decode loop at all, so the work is one large, parallel, GPU-friendly prefill per request.</p>
+<figure class="paper-demo" data-demo="serving-cost"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>Why prefill-only and short prompts matter. Cost is modeled as model size × tokens processed (about 2 × parameters × tokens operations). "Generate titles" assumes each title takes 6 tokens and is decoded one token at a time. Illustrative numbers, not the paper's.</figcaption></figure>
+<hr />
+<h2 id="5-results-5"><a class="anchor" href="#5-results-5" aria-label="Link to this section">#</a>5. Results (§5)</h2>
+<h3 id="51-genrec-versus-the-production-ranker-51">5.1 GenRec versus the production ranker (§5.1)</h3>
+<p>The baseline is "a mature discriminative model tuned over many years".</p>
+<p><strong>Offline.</strong> The metric is <strong>Mean Reciprocal Rank (MRR)</strong>. For each test request, find the rank of the item the member actually engaged with and take <span class="math-inline">$1/\text{rank}$</span>. Then average over requests:</p>
+<div class="math-display">$$\text{MRR} = \frac{1}{|Q|} \sum_{q \in Q} \frac{1}{\text{rank}_q}$$</div>
+<p>For example, if the true items land at ranks 1, 3 and 2 in three requests, MRR <span class="math-inline">$= (1 + \tfrac{1}{3} + \tfrac{1}{2}) / 3 \approx 0.61$</span>. MRR rewards putting the right title at the very top. A title at rank 2 earns only half the credit of rank 1.</p>
+<p>With <strong>about 40× fewer Phase-2 labeled training examples</strong> than the production model, and fewer input signals, GenRec achieved <strong>about +1.6% relative MRR</strong> over the baseline. "Relative" means a percentage of the baseline value, so an MRR of 0.300 would become about 0.305. Offline metrics "continue to improve" as training data and input signals are scaled up (§5.1).</p>
+<p><strong>Online A/B test.</strong> In an <strong>A/B test</strong>, live traffic is split at random. One group, the control, gets the old system and another, the treatment, gets the new one, and their outcomes are compared. GenRec got <strong>about 10% of Netflix traffic for 4 weeks</strong> on key <strong>batch-compute surfaces</strong>: places where recommendations are computed ahead of time in large batches rather than live at the moment a page loads. The tested model was deliberately a "low-data, low-signals configuration" (Figure 3):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Metric (average treatment effect vs production)</th>
+<th>Lift</th>
+<th>p-value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Short-term homepage engagement metric</td>
+<td>+0.115%</td>
+<td><span class="math-inline">$3.1 \times 10^{-10}$</span></td>
+</tr>
+<tr>
+<td>Long-term core metric</td>
+<td>+0.006%</td>
+<td>0.025</td>
+</tr>
+</tbody>
+</table></div>
+<p>A <strong>p-value</strong> is the probability of seeing a difference at least this large if the new model were really no better. Small values, conventionally below 0.05, count as statistically significant.</p>
+<p>+0.006% sounds tiny. But a long-term core metric (the paper doesn't name it) measured across hundreds of millions of members rarely moves, so the authors call it "statistically meaningful at Netflix scale". Moving the long-term metric, not just the short-term one, is the evidence that the reward weighting does its job.</p>
+<p>The takeaway is the paper's own: "an LLM-backed ranker, when combined with appropriate post-training and reward signals, can become a viable and promising alternative to traditional recommendation ranker" (§5.1). It needed much less Phase-2 data to get there, and Phase 2 is the stage that is re-run often.</p>
+<h3 id="52-data-and-model-scaling-52">5.2 Data and model scaling (§5.2)</h3>
+<p><strong>Data scaling.</strong> With everything else fixed, GenRec was trained on 1× to 20× the smallest Phase-2 dataset, for two backbones: about <strong>1B</strong> and about <strong>10B</strong> parameters. For both, offline MRR <strong>rose monotonically with more data</strong>. The 1B model scored lower overall but scaled in the same way (Figure 4 shows the 10B curve, rising about 16% from 1× to 20× on a log-scaled x-axis).</p>
+<p><strong>Model scaling.</strong> With a fixed training budget (the same GPUs and similar wall-clock time), backbones from about 1B to about 10B parameters were compared. Larger backbones <strong>consistently achieved higher MRR</strong>.</p>
+<p><strong>The quality-cost trade-off.</strong> Bigger data and bigger models cost more to train and to serve, and GenRec is retrained often and serves live traffic. So the team uses the scaling curves together with the context-length ablations to find a <strong>"sweet spot" on the quality-cost Pareto frontier</strong>. A <strong>Pareto frontier</strong> is the set of configurations where you cannot improve quality without paying more, or pay less without losing quality. The sweet spot is a point on it that "recovers most of the achievable quality improvement while staying within a given compute budget" (§5.2).</p>
+<h3 id="53-how-much-each-phase-contributes-53-table-1">5.3 How much each phase contributes (§5.3, Table 1)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Effect on offline ranking metrics (MRR)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phase 1</td>
+<td><strong>+10–20%</strong> vs using an off-the-shelf open-source LLM as the base</td>
+</tr>
+<tr>
+<td>Phase 2</td>
+<td><strong>+35–50%</strong> vs a freshly trained Phase-1 model, rising to <strong>about +80%</strong> two weeks later</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Phase 1 matters.</strong> Starting from the Netflix foundation model rather than a generic open-source LLM is worth 10–20%. That shows the value of the personalization and content understanding the foundation model already has.</li>
+<li><strong>Phase 2 matters more, and more over time.</strong> Even measured on the day the Phase-1 model's training data ends, when it is as fresh as it will ever be, Phase 2 adds 35–50%. Two weeks later the gap is about 80%. Partly that is task-specific adaptation (ranking data, rewards, verbalization). Partly the Phase-1 model goes <strong>stale</strong> as popularity and members' interests shift. This is the quantitative case for re-running Phase 2 frequently.</li>
+</ul>
+<h3 id="54-context-length-optimization-54">5.4 Context length optimization (§5.4)</h3>
+<p>The context window drives both quality and cost: more history means more information but more tokens. The team searched for compact verbalizations in three steps:</p>
+<ol>
+<li><strong>Event selection and compression.</strong> Drop low-signal or noisy engagements, compress repetitive activity, and keep high-signal interactions. The result is a cleaned, ordered list of candidate events.</li>
+<li><strong>Find the right history length.</strong> Sweep how many of those events go into the prompt and plot MRR against the count (Figure 5). There is an <strong>elbow</strong>: quality rises up to a point, then extra tokens add little. Normalized to the chosen setting, which the paper calls "2N" events, using only N events loses <strong>7.9%</strong>, and using 3N events gains just <strong>+1.7%</strong> for 50% more history.</li>
+<li><strong>Write each event concisely.</strong> For each kept event, try prompts with different levels of detail: different engagement details, simpler wording, and no <strong>few-shot examples</strong> (worked examples placed in the prompt). Measure offline quality for each.</li>
+</ol>
+<p>The outcome: the context shrank to <strong>roughly a third</strong> of the original budget, "from about 5,000 tokens down to about 1,700 tokens", with <strong>negligible</strong> loss in offline ranking quality. GenRec is "largely compute-bound", meaning its speed is limited by arithmetic rather than memory traffic, as prefill workloads usually are. Cost is therefore roughly proportional to context length, and <strong>serving cost also fell to about a third</strong> (§5.4).</p>
+<figure class="paper-demo" data-demo="genrec-results"><p class="demo-kicker">Try it</p><div class="demo-body"></div><figcaption>The paper's results, redrawn. Switch between the data-scaling curve (Figure 4), the history-length elbow (Figure 5), the Phase 1 versus Phase 2 gains (Table 1) and the A/B test (Figure 3). Curve values are read off the paper's figures and are approximate.</figcaption></figure>
+<hr />
+<h2 id="6-the-authors-discussion-llm-native-recommendation-6"><a class="anchor" href="#6-the-authors-discussion-llm-native-recommendation-6" aria-label="Link to this section">#</a>6. The authors' discussion: "LLM-native" recommendation (§6)</h2>
+<p>The authors argue that moving to LLM-based recommendation is "not just 'swapping the ranker with a transformer'". It changes five things.</p>
+<ol>
+<li><strong>From feature engineering to context engineering (§6.1).</strong> Instead of infrastructure for computing features, keeping them fresh and <strong>leakage control</strong> (making sure no feature carries information from after the moment being predicted), the work becomes building rich text contexts. "The 'prompt' becomes the new feature vector": the questions are which signals to include, how to summarize them and how far back to go.</li>
+<li><strong>From custom architectures to foundation backbones (§6.2).</strong> Two-tower models, DLRM-style interaction networks and multi-task setups give way to one transformer backbone inherited from a foundation model. "Innovation moves up a level", to data, scaling laws, post-training and inference optimization. The backbone also allows steering through natural-language inputs.</li>
+<li><strong>Scaling laws as a design guide (§6.3).</strong> Classical recommenders hit diminishing returns from sparse IDs and task-specific designs. An LLM-backed ranker inherits the smooth scaling of its backbone (§5.2), so scaling laws become "a central design guide rather than an after-the-fact observation".</li>
+<li><strong>Pre-training, post-training and reward alignment (§6.4).</strong> Many use cases can share one foundation and adapt it with lightweight post-training and rewards, instead of rebuilding similar capabilities "in separate, siloed systems".</li>
+<li><strong>From recommender infrastructure to LLM infrastructure (§6.5).</strong> KV caching, <strong>prefix caching</strong> (reusing computation for prompts that start the same way) and prefill-only inference become key levers. The serving stack starts to look like modern LLM infrastructure (GPUs, vLLM or Triton, careful batching and caching) rather than one built around small MLPs or factorization models.</li>
+</ol>
+<hr />
+<h2 id="7-the-authors-conclusion-and-future-work-7"><a class="anchor" href="#7-the-authors-conclusion-and-future-work-7" aria-label="Link to this section">#</a>7. The authors' conclusion and future work (§7)</h2>
+<p>GenRec adapts an in-house foundation LLM into a ranker for production traffic on batch-compute surfaces. It verbalizes histories and context, adds a catalog-aware head, and trains with multiple reward signals. Despite far fewer Phase-2 labels and explicit input signals than the long-standing production ranker, it achieved statistically significant improvements on both short-term and long-term online metrics "in the settings we study".</p>
+<p>The authors present GenRec as "an initial step toward a more LLM-centric recommendation stack at Netflix". They call the path viable and promising "in at least some scenarios", provided cost and infrastructure complexity are managed carefully and quality is evaluated "rigorously against strong non-LLM baselines".</p>
+<p>The future directions mentioned along the way are:</p>
+<ul>
+<li>RL-style alignment such as GRPO, once its training cost is manageable (§4.6);</li>
+<li>natural-language explanations generated by the same model (§4.4);</li>
+<li>more prompt-based steering of recommendations (§1, §6.2);</li>
+<li>further scaling of Phase-2 data and input signals, since offline metrics were still rising (§5.1).</li>
+</ul>
+<hr />
+<h2 id="reading-notes-what-the-paper-leaves-out"><a class="anchor" href="#reading-notes-what-the-paper-leaves-out" aria-label="Link to this section">#</a>Reading notes: what the paper leaves out</h2>
+<p><em>This section is my commentary, not the paper's claims.</em> Several details a reader might want are not disclosed:</p>
+<ul>
+<li><strong>No absolute numbers.</strong> MRR values, the core metric's name, exact model sizes (only "∼1B" and "∼10B") and the production model's feature count are withheld, so results can only be compared in relative terms.</li>
+<li><strong>Open design details.</strong> The scoring function <span class="math-inline">$\phi$</span>, the pooling position, how item embeddings are initialized, and how several rewards become one weight <span class="math-inline">$w$</span> are not specified.</li>
+<li><strong>Batch, not real-time.</strong> The A/B test covered precomputed batch surfaces. Ranking live at page load, under tight latency budgets, is a harder serving problem the paper doesn't claim to have solved.</li>
+<li><strong>Probably not a ceiling.</strong> GenRec won with less data and fewer inputs while offline metrics were still climbing, but no full-data online test is reported.</li>
+</ul>
+<hr />
+<h2 id="glossary"><a class="anchor" href="#glossary" aria-label="Link to this section">#</a>Glossary</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A/B test</td>
+<td>Randomly split live traffic between the old system (control) and the new one (treatment), then compare outcomes</td>
+</tr>
+<tr>
+<td>Batch-compute surface</td>
+<td>A product surface whose recommendations are computed ahead of time in bulk rather than at request time</td>
+</tr>
+<tr>
+<td>Beam search</td>
+<td>Decoding that keeps the B best partial outputs at each step instead of only the single best</td>
+</tr>
+<tr>
+<td>Catalog-aware head</td>
+<td>GenRec's output layer: scores every catalog item from the pooled hidden state and learned item embeddings</td>
+</tr>
+<tr>
+<td>Cold-start item</td>
+<td>An item with little or no interaction history, such as a new release</td>
+</tr>
+<tr>
+<td>Context engineering</td>
+<td>Choosing what information goes into a model's limited context window and how it is written</td>
+</tr>
+<tr>
+<td>Cross-entropy loss</td>
+<td><span class="math-inline">$-\log$</span> of the probability the model gave to the correct answer</td>
+</tr>
+<tr>
+<td>Decode</td>
+<td>Generating output tokens one at a time, one forward pass each</td>
+</tr>
+<tr>
+<td>Discriminative model</td>
+<td>A model that maps fixed input features to a score or class probability</td>
+</tr>
+<tr>
+<td>Distillation</td>
+<td>Training a small student model to imitate a larger teacher model</td>
+</tr>
+<tr>
+<td>GRPO</td>
+<td>Group Relative Policy Optimization, an RL method for fine-tuning LLMs from rewards</td>
+</tr>
+<tr>
+<td>MRR</td>
+<td>Mean Reciprocal Rank: the average of 1/rank of the true item</td>
+</tr>
+<tr>
+<td>Pareto frontier</td>
+<td>The set of options where one goal can't be improved without worsening another</td>
+</tr>
+<tr>
+<td>Post-training</td>
+<td>Further training of a pretrained model for a specific task or behavior</td>
+</tr>
+<tr>
+<td>Prefill</td>
+<td>Processing the whole prompt in one parallel forward pass</td>
+</tr>
+<tr>
+<td>p-value</td>
+<td>Probability of a difference at least this large if there were truly no effect</td>
+</tr>
+<tr>
+<td>Reward-weighted loss</td>
+<td>Each example's loss is multiplied by a reward-derived weight</td>
+</tr>
+<tr>
+<td>Sampled softmax</td>
+<td>Approximating the softmax denominator with a random sample of negatives</td>
+</tr>
+<tr>
+<td>Semantic ID</td>
+<td>A short code of tokens that identifies an item and places similar items close together</td>
+</tr>
+<tr>
+<td>Softmax</td>
+<td>Turns a list of scores into probabilities: <span class="math-inline">$e^{s_i} / \sum_j e^{s_j}$</span></td>
+</tr>
+<tr>
+<td>Verbalization</td>
+<td>Writing user history, item metadata and context as text for the LLM</td>
+</tr>
+<tr>
+<td>vLLM</td>
+<td>An open-source LLM serving engine; Netflix's in-house stack is built on it</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="cheat-sheet"><a class="anchor" href="#cheat-sheet" aria-label="Link to this section">#</a>Cheat sheet</h2>
+<p><strong>Loss.</strong> <span class="math-inline">$\mathcal{L} = \alpha\,\mathcal{L}_{\text{ranking}} + \beta\,\mathcal{L}_{\text{language}} + \gamma\,\mathcal{L}_{\text{misc}}$</span>, <span class="math-inline">$\alpha + \beta + \gamma = 1$</span>; the ranking loss is reward-weighted softmax cross-entropy over the catalog.</p>
+<p><strong>Scoring.</strong> <span class="math-inline">$x = V(H, \{M_i\}, \tau)$</span> → pooled <span class="math-inline">$h$</span> → <span class="math-inline">$s_i = \phi(h, e_i)$</span> → softmax and sort, in one prefill-only pass on vLLM. Cost ≈ model size × context length.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Number</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>~40× fewer</td>
+<td>Phase-2 labeled examples than the production ranker</td>
+</tr>
+<tr>
+<td>+1.6%</td>
+<td>Relative offline MRR gain over production</td>
+</tr>
+<tr>
+<td>~10%, 4 weeks</td>
+<td>A/B test traffic share and duration</td>
+</tr>
+<tr>
+<td>+0.115% (p = 3.1e-10)</td>
+<td>Short-term homepage engagement lift</td>
+</tr>
+<tr>
+<td>+0.006% (p = 0.025)</td>
+<td>Long-term core metric lift</td>
+</tr>
+<tr>
+<td>~1B and ~10B</td>
+<td>Backbone sizes in the scaling studies</td>
+</tr>
+<tr>
+<td>1×–20×</td>
+<td>Phase-2 data range; MRR rises monotonically</td>
+</tr>
+<tr>
+<td>+10–20%</td>
+<td>Phase 1 vs an off-the-shelf LLM base</td>
+</tr>
+<tr>
+<td>+35–50% → ~80%</td>
+<td>Phase 2 vs fresh Phase 1, then two weeks later</td>
+</tr>
+<tr>
+<td>~5,000 → ~1,700</td>
+<td>Prompt tokens after compaction; serving cost falls to ~⅓</td>
+</tr>
+<tr>
+<td>−7.9% / +1.7%</td>
+<td>MRR with half / 1.5× the chosen history length</td>
+</tr>
+</tbody>
+</table></div>
+          </article>
+        </div>
+        <section class="keep-reading">
+          <h2 class="kr-title">Keep <em>reading</em></h2>
+          <div class="rgrid">
+<article class="rcard reveal" data-type="side" data-search="brain-rewiring reads  45 non-technical topics for a curious mind on one page, from attention and habits to deep time, animal minds and stoicism, with rabbit holes, tiny actions and 21 live demos. side read psychology history science philosophy">
+  <div class="rcard-top"><span class="rcard-type t-side">Side read</span><span class="rcard-meta">Oct 12, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-brain-rewiring.vercel.app/" target="_blank" rel="noopener">Brain-Rewiring Reads</a></h3>
+  <p class="rcard-summary">45 non-technical topics for a curious mind on one page, from attention and habits to deep time, animal minds and Stoicism, with rabbit holes, tiny actions and 21 live demos.</p>
+  <ul class="tags"><li>Psychology</li><li>History</li><li>Science</li><li>Philosophy</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open it <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="paper" data-search="attention is all you need the transformer, explained for a first-time reader the paper that replaced recurrence with self-attention and became the basis of bert, gpt and nearly every modern language model. every section, table and ablation, with live demos of attention, scaling, positional encoding and the learning-rate schedule. paper explainer transformers attention nlp deep learning">
+  <div class="rcard-top"><span class="rcard-type t-paper">Paper explainer</span><span class="rcard-meta">26 min read · Oct 12, 2026</span></div>
+  <h3 class="rcard-title"><a href="../../../reading/papers/attention-is-all-you-need/">Attention Is All You Need</a></h3>
+  <p class="rcard-sub">The Transformer, explained for a first-time reader</p><p class="rcard-summary">The paper that replaced recurrence with self-attention and became the basis of BERT, GPT and nearly every modern language model. Every section, table and ablation, with live demos of attention, scaling, positional encoding and the learning-rate schedule.</p>
+  <ul class="tags"><li>Transformers</li><li>Attention</li><li>NLP</li><li>Deep learning</li></ul>
+  <span class="link-arrow" aria-hidden="true">Read the explainer <svg><use href="#i-arrow-r" /></svg></span>
+</article>
+<article class="rcard reveal" data-type="guide" data-search="tokens per second  a hands-on llm inference guide for people who have never used a gpu: latency and memory math, gpu utilization, batching, kv caches, quantization, speculative decoding, multi-gpu serving, cost and troubleshooting. interactive guide llms inference gpus">
+  <div class="rcard-top"><span class="rcard-type t-guide">Interactive guide</span><span class="rcard-meta">Oct 1, 2026</span></div>
+  <h3 class="rcard-title"><a href="https://a2z-llm-inference.vercel.app/" target="_blank" rel="noopener">Tokens per Second</a></h3>
+  <p class="rcard-summary">A hands-on LLM inference guide for people who have never used a GPU: latency and memory math, GPU utilization, batching, KV caches, quantization, speculative decoding, multi-GPU serving, cost and troubleshooting.</p>
+  <ul class="tags"><li>LLMs</li><li>Inference</li><li>GPUs</li></ul>
+  <span class="link-arrow" aria-hidden="true">Open the guide <svg><use href="#i-arrow-ur" /></svg></span>
+</article>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p class="footer-sig">Aaryan <em>Shah</em></p>
+        <p class="mono muted">© <span id="year">2026</span> · <a href="../../../reading/">Reading list</a> · <a href="../../../reading/feed.xml">RSS</a></p>
+        <a class="to-top" href="#top" aria-label="Back to top"><svg aria-hidden="true"><use href="#i-arrow-up" /></svg></a>
+      </div>
+    </footer>
+
+    <script src="../../../assets/site/site.js" defer></script>
+    <script src="../../../assets/site/reading.js" defer></script>
+    <script src="../../../assets/site/vendor/katex/katex.min.js" defer></script>
+    <script src="../../../assets/site/vendor/katex/auto-render.min.js" defer></script>
+    <script src="../../../assets/site/paper-demos.js" defer></script>
+  </body>
+</html>
