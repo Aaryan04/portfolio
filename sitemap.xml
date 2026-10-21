@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://aaryan04.github.io/portfolio/</loc><lastmod>2026-10-17</lastmod></url>
-  <url><loc>https://aaryan04.github.io/portfolio/reading/</loc><lastmod>2026-10-17</lastmod></url>
-  <url><loc>https://aaryan04.github.io/portfolio/reading/papers/attention-is-all-you-need/</loc><lastmod>2026-10-17</lastmod></url>
+  <url><loc>https://aaryan04.github.io/portfolio/</loc><lastmod>2026-10-20</lastmod></url>
+  <url><loc>https://aaryan04.github.io/portfolio/reading/</loc><lastmod>2026-10-20</lastmod></url>
+  <url><loc>https://aaryan04.github.io/portfolio/reading/papers/genrec-netflix-llm-ranker/</loc><lastmod>2026-10-20</lastmod></url>
+  <url><loc>https://aaryan04.github.io/portfolio/reading/papers/attention-is-all-you-need/</loc><lastmod>2026-10-20</lastmod></url>
 </urlset>

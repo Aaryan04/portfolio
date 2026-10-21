@@ -5,6 +5,13 @@
     <link>https://aaryan04.github.io/portfolio/reading/</link>
     <description>Paper explainers and posts by Aaryan Shah.</description>
     <item>
+      <title>GenRec: An LLM-Backed Recommendation Ranker at Netflix</title>
+      <link>https://aaryan04.github.io/portfolio/reading/papers/genrec-netflix-llm-ranker/</link>
+      <guid>https://aaryan04.github.io/portfolio/reading/papers/genrec-netflix-llm-ranker/</guid>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Netflix replaces a ranker built on thousands of hand-engineered features with a post-trained in-house LLM that reads watch histories written as text and scores the whole catalog in a single forward pass. Every section, number and figure, with live demos of verbalization, the catalog-aware scoring head, serving cost and the results.</description>
+    </item>
+    <item>
       <title>Attention Is All You Need</title>
       <link>https://aaryan04.github.io/portfolio/reading/papers/attention-is-all-you-need/</link>
       <guid>https://aaryan04.github.io/portfolio/reading/papers/attention-is-all-you-need/</guid>
